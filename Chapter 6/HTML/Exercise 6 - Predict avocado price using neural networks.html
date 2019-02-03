@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>XGBoost Cross Validation</title>
+<title>Exercise 6 - Predict avocado price using neural networks</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13115,58 +13115,21 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">accuracy_score</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-</pre></div>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">manifold</span>
 
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/adult-data.csv&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="s1">&#39;workclass&#39;</span><span class="p">,</span> <span class="s1">&#39;fnlwgt&#39;</span><span class="p">,</span>
-                                                 <span class="s1">&#39;education&#39;</span><span class="p">,</span> <span class="s1">&#39;education-num&#39;</span><span class="p">,</span> <span class="s1">&#39;marital-status&#39;</span><span class="p">,</span> 
-                                                 <span class="s1">&#39;occupation&#39;</span><span class="p">,</span> <span class="s1">&#39;relationship&#39;</span><span class="p">,</span> <span class="s1">&#39;race&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span>
-                                                 <span class="s1">&#39;capital-gain&#39;</span><span class="p">,</span> <span class="s1">&#39;capital-loss&#39;</span><span class="p">,</span>
-                                                 <span class="s1">&#39;hours-per-week&#39;</span><span class="p">,</span> <span class="s1">&#39;native-country&#39;</span><span class="p">,</span> <span class="s1">&#39;income&#39;</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Concatenate</span><span class="p">,</span> <span class="n">Reshape</span><span class="p">,</span> <span class="n">Dropout</span>
+<span class="kn">from</span> <span class="nn">keras.layers.embeddings</span> <span class="k">import</span> <span class="n">Embedding</span>
+<span class="kn">from</span> <span class="nn">keras.callbacks</span> <span class="k">import</span> <span class="n">ModelCheckpoint</span><span class="p">,</span> <span class="n">EarlyStopping</span>
 </pre></div>
 
     </div>
@@ -13179,7 +13142,64 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[3]:</div>
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>Using TensorFlow backend.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/avocado.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[43]:</div>
 
 
 
@@ -13202,116 +13222,369 @@ div#notebook {
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>age</th>
-      <th>workclass</th>
-      <th>fnlwgt</th>
-      <th>education</th>
-      <th>education-num</th>
-      <th>marital-status</th>
-      <th>occupation</th>
-      <th>relationship</th>
-      <th>race</th>
-      <th>sex</th>
-      <th>capital-gain</th>
-      <th>capital-loss</th>
-      <th>hours-per-week</th>
-      <th>native-country</th>
-      <th>income</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>...</th>
+      <th>18239</th>
+      <th>18240</th>
+      <th>18241</th>
+      <th>18242</th>
+      <th>18243</th>
+      <th>18244</th>
+      <th>18245</th>
+      <th>18246</th>
+      <th>18247</th>
+      <th>18248</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>39</td>
-      <td>State-gov</td>
-      <td>77516</td>
-      <td>Bachelors</td>
-      <td>13</td>
-      <td>Never-married</td>
-      <td>Adm-clerical</td>
-      <td>Not-in-family</td>
-      <td>White</td>
-      <td>Male</td>
-      <td>2174</td>
+      <th>Unnamed: 0</th>
       <td>0</td>
-      <td>40</td>
-      <td>United-States</td>
-      <td>&lt;=50K</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>50</td>
-      <td>Self-emp-not-inc</td>
-      <td>83311</td>
-      <td>Bachelors</td>
-      <td>13</td>
-      <td>Married-civ-spouse</td>
-      <td>Exec-managerial</td>
-      <td>Husband</td>
-      <td>White</td>
-      <td>Male</td>
-      <td>0</td>
-      <td>0</td>
-      <td>13</td>
-      <td>United-States</td>
-      <td>&lt;=50K</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>38</td>
-      <td>Private</td>
-      <td>215646</td>
-      <td>HS-grad</td>
-      <td>9</td>
-      <td>Divorced</td>
-      <td>Handlers-cleaners</td>
-      <td>Not-in-family</td>
-      <td>White</td>
-      <td>Male</td>
-      <td>0</td>
-      <td>0</td>
-      <td>40</td>
-      <td>United-States</td>
-      <td>&lt;=50K</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>53</td>
-      <td>Private</td>
-      <td>234721</td>
-      <td>11th</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
       <td>7</td>
-      <td>Married-civ-spouse</td>
-      <td>Handlers-cleaners</td>
-      <td>Husband</td>
-      <td>Black</td>
-      <td>Male</td>
-      <td>0</td>
-      <td>0</td>
-      <td>40</td>
-      <td>United-States</td>
-      <td>&lt;=50K</td>
+      <td>8</td>
+      <td>9</td>
+      <td>...</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+      <td>7</td>
+      <td>8</td>
+      <td>9</td>
+      <td>10</td>
+      <td>11</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>28</td>
-      <td>Private</td>
-      <td>338409</td>
-      <td>Bachelors</td>
-      <td>13</td>
-      <td>Married-civ-spouse</td>
-      <td>Prof-specialty</td>
-      <td>Wife</td>
-      <td>Black</td>
-      <td>Female</td>
+      <th>Date</th>
+      <td>27-12-2015</td>
+      <td>20-12-2015</td>
+      <td>13-12-2015</td>
+      <td>06-12-2015</td>
+      <td>29-11-2015</td>
+      <td>22-11-2015</td>
+      <td>15-11-2015</td>
+      <td>08-11-2015</td>
+      <td>01-11-2015</td>
+      <td>25-10-2015</td>
+      <td>...</td>
+      <td>11-03-2018</td>
+      <td>04-03-2018</td>
+      <td>25-02-2018</td>
+      <td>18-02-2018</td>
+      <td>11-02-2018</td>
+      <td>04-02-2018</td>
+      <td>28-01-2018</td>
+      <td>21-01-2018</td>
+      <td>14-01-2018</td>
+      <td>07-01-2018</td>
+    </tr>
+    <tr>
+      <th>AveragePrice</th>
+      <td>1.33</td>
+      <td>1.35</td>
+      <td>0.93</td>
+      <td>1.08</td>
+      <td>1.28</td>
+      <td>1.26</td>
+      <td>0.99</td>
+      <td>0.98</td>
+      <td>1.02</td>
+      <td>1.07</td>
+      <td>...</td>
+      <td>1.56</td>
+      <td>1.54</td>
+      <td>1.57</td>
+      <td>1.56</td>
+      <td>1.57</td>
+      <td>1.63</td>
+      <td>1.71</td>
+      <td>1.87</td>
+      <td>1.93</td>
+      <td>1.62</td>
+    </tr>
+    <tr>
+      <th>Total Volume</th>
+      <td>64236.6</td>
+      <td>54877</td>
+      <td>118220</td>
+      <td>78992.1</td>
+      <td>51039.6</td>
+      <td>55979.8</td>
+      <td>83453.8</td>
+      <td>109428</td>
+      <td>99811.4</td>
+      <td>74338.8</td>
+      <td>...</td>
+      <td>22128.4</td>
+      <td>17393.3</td>
+      <td>18421.2</td>
+      <td>17597.1</td>
+      <td>15986.2</td>
+      <td>17074.8</td>
+      <td>13888</td>
+      <td>13766.8</td>
+      <td>16205.2</td>
+      <td>17489.6</td>
+    </tr>
+    <tr>
+      <th>4046</th>
+      <td>1036.74</td>
+      <td>674.28</td>
+      <td>794.7</td>
+      <td>1132</td>
+      <td>941.48</td>
+      <td>1184.27</td>
+      <td>1368.92</td>
+      <td>703.75</td>
+      <td>1022.15</td>
+      <td>842.4</td>
+      <td>...</td>
+      <td>2162.67</td>
+      <td>1832.24</td>
+      <td>1974.26</td>
+      <td>1892.05</td>
+      <td>1924.28</td>
+      <td>2046.96</td>
+      <td>1191.7</td>
+      <td>1191.92</td>
+      <td>1527.63</td>
+      <td>2894.77</td>
+    </tr>
+    <tr>
+      <th>4225</th>
+      <td>54454.8</td>
+      <td>44638.8</td>
+      <td>109150</td>
+      <td>71976.4</td>
+      <td>43838.4</td>
+      <td>48068</td>
+      <td>73672.7</td>
+      <td>101815</td>
+      <td>87315.6</td>
+      <td>64757.4</td>
+      <td>...</td>
+      <td>3194.25</td>
+      <td>1905.57</td>
+      <td>2482.65</td>
+      <td>1928.36</td>
+      <td>1368.32</td>
+      <td>1529.2</td>
+      <td>3431.5</td>
+      <td>2452.79</td>
+      <td>2981.04</td>
+      <td>2356.13</td>
+    </tr>
+    <tr>
+      <th>4770</th>
+      <td>48.16</td>
+      <td>58.33</td>
+      <td>130.5</td>
+      <td>72.58</td>
+      <td>75.78</td>
+      <td>43.61</td>
+      <td>93.26</td>
+      <td>80</td>
+      <td>85.34</td>
+      <td>113</td>
+      <td>...</td>
+      <td>8.93</td>
       <td>0</td>
       <td>0</td>
-      <td>40</td>
-      <td>Cuba</td>
-      <td>&lt;=50K</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>727.94</td>
+      <td>727.01</td>
+      <td>224.53</td>
+    </tr>
+    <tr>
+      <th>Total Bags</th>
+      <td>8696.87</td>
+      <td>9505.56</td>
+      <td>8145.35</td>
+      <td>5811.16</td>
+      <td>6183.95</td>
+      <td>6683.91</td>
+      <td>8318.86</td>
+      <td>6829.22</td>
+      <td>11388.4</td>
+      <td>8625.92</td>
+      <td>...</td>
+      <td>16762.6</td>
+      <td>13655.5</td>
+      <td>13964.3</td>
+      <td>13776.7</td>
+      <td>12693.6</td>
+      <td>13498.7</td>
+      <td>9264.84</td>
+      <td>9394.11</td>
+      <td>10969.5</td>
+      <td>12014.1</td>
+    </tr>
+    <tr>
+      <th>Small Bags</th>
+      <td>8603.62</td>
+      <td>9408.07</td>
+      <td>8042.21</td>
+      <td>5677.4</td>
+      <td>5986.26</td>
+      <td>6556.47</td>
+      <td>8196.81</td>
+      <td>6266.85</td>
+      <td>11104.5</td>
+      <td>8061.47</td>
+      <td>...</td>
+      <td>16510.3</td>
+      <td>13401.9</td>
+      <td>13698.3</td>
+      <td>13553.5</td>
+      <td>12437.4</td>
+      <td>13066.8</td>
+      <td>8940.04</td>
+      <td>9351.8</td>
+      <td>10919.5</td>
+      <td>11988.1</td>
+    </tr>
+    <tr>
+      <th>Large Bags</th>
+      <td>93.25</td>
+      <td>97.49</td>
+      <td>103.14</td>
+      <td>133.76</td>
+      <td>197.69</td>
+      <td>127.44</td>
+      <td>122.05</td>
+      <td>562.37</td>
+      <td>283.83</td>
+      <td>564.45</td>
+      <td>...</td>
+      <td>252.25</td>
+      <td>253.56</td>
+      <td>266.06</td>
+      <td>223.18</td>
+      <td>256.22</td>
+      <td>431.85</td>
+      <td>324.8</td>
+      <td>42.31</td>
+      <td>50</td>
+      <td>26.01</td>
+    </tr>
+    <tr>
+      <th>XLarge Bags</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>...</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+    </tr>
+    <tr>
+      <th>year</th>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>...</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+    </tr>
+    <tr>
+      <th>region</th>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>...</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
     </tr>
   </tbody>
 </table>
+<p>14 rows × 18249 columns</p>
 </div>
 </div>
 
@@ -13323,107 +13596,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;workclass&#39;</span><span class="p">])</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;education&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;education&#39;</span><span class="p">])</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;marital-status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;marital-status&#39;</span><span class="p">])</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;occupation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;occupation&#39;</span><span class="p">])</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">])</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;race&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;race&#39;</span><span class="p">])</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">])</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;native-country&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;native-country&#39;</span><span class="p">])</span>
-<span class="n">data</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;income&#39;</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">Y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">income</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">0.8</span><span class="p">)]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">0.8</span><span class="p">):]</span><span class="o">.</span><span class="n">values</span>
-<span class="n">Y_train</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[:</span><span class="nb">int</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">0.8</span><span class="p">)]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">Y</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">0.8</span><span class="p">):]</span><span class="o">.</span><span class="n">values</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[59]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">Y_train</span><span class="p">)</span>
-<span class="n">test</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">Y_test</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[102]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_error</span> <span class="o">=</span> <span class="p">{}</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[103]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
-    <span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;max_depth&#39;</span><span class="p">:</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;silent&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;objective&#39;</span><span class="p">:</span><span class="s1">&#39;binary:hinge&#39;</span><span class="p">}</span>
-    <span class="n">num_round</span> <span class="o">=</span> <span class="mi">50</span>
-    <span class="n">model_metrics</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">cv</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">num_round</span><span class="p">,</span> <span class="n">nfold</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="n">test_error</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_metrics</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;test-error-mean&#39;</span><span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[104]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">test_error</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span><span class="n">test_error</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Max Depth&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Test Error&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13436,15 +13612,27 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt"></div>
+    <div class="prompt output_prompt">Out[42]:</div>
 
 
 
 
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
+<div class="output_text output_subarea output_execute_result">
+<pre>Unnamed: 0      0
+Date            0
+AveragePrice    0
+Total Volume    0
+4046            0
+4225            0
+4770            0
+Total Bags      0
+Small Bags      0
+Large Bags      0
+XLarge Bags     0
+type            0
+year            0
+region          0
+dtype: int64</pre>
 </div>
 
 </div>
@@ -13455,10 +13643,10 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[70]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_error</span> <span class="o">=</span> <span class="p">{}</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Day&#39;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">Date</span><span class="o">.</span><span class="n">str</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">Date</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -13468,14 +13656,579 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[96]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">5</span><span class="p">):</span>
-    <span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;max_depth&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span><span class="mf">0.001</span><span class="o">*</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;silent&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;objective&#39;</span><span class="p">:</span><span class="s1">&#39;binary:hinge&#39;</span><span class="p">}</span>
-    <span class="n">num_round</span> <span class="o">=</span> <span class="mi">500</span>
-    <span class="n">model_metrics</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">cv</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">num_round</span><span class="p">,</span> <span class="n">nfold</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="n">test_error</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_metrics</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;test-error-mean&#39;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[7]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+      <th>6</th>
+      <th>7</th>
+      <th>8</th>
+      <th>9</th>
+      <th>...</th>
+      <th>18239</th>
+      <th>18240</th>
+      <th>18241</th>
+      <th>18242</th>
+      <th>18243</th>
+      <th>18244</th>
+      <th>18245</th>
+      <th>18246</th>
+      <th>18247</th>
+      <th>18248</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Unnamed: 0</th>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+      <td>7</td>
+      <td>8</td>
+      <td>9</td>
+      <td>...</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+      <td>7</td>
+      <td>8</td>
+      <td>9</td>
+      <td>10</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <td>27-12-2015</td>
+      <td>20-12-2015</td>
+      <td>13-12-2015</td>
+      <td>06-12-2015</td>
+      <td>29-11-2015</td>
+      <td>22-11-2015</td>
+      <td>15-11-2015</td>
+      <td>08-11-2015</td>
+      <td>01-11-2015</td>
+      <td>25-10-2015</td>
+      <td>...</td>
+      <td>11-03-2018</td>
+      <td>04-03-2018</td>
+      <td>25-02-2018</td>
+      <td>18-02-2018</td>
+      <td>11-02-2018</td>
+      <td>04-02-2018</td>
+      <td>28-01-2018</td>
+      <td>21-01-2018</td>
+      <td>14-01-2018</td>
+      <td>07-01-2018</td>
+    </tr>
+    <tr>
+      <th>AveragePrice</th>
+      <td>1.33</td>
+      <td>1.35</td>
+      <td>0.93</td>
+      <td>1.08</td>
+      <td>1.28</td>
+      <td>1.26</td>
+      <td>0.99</td>
+      <td>0.98</td>
+      <td>1.02</td>
+      <td>1.07</td>
+      <td>...</td>
+      <td>1.56</td>
+      <td>1.54</td>
+      <td>1.57</td>
+      <td>1.56</td>
+      <td>1.57</td>
+      <td>1.63</td>
+      <td>1.71</td>
+      <td>1.87</td>
+      <td>1.93</td>
+      <td>1.62</td>
+    </tr>
+    <tr>
+      <th>Total Volume</th>
+      <td>64236.6</td>
+      <td>54877</td>
+      <td>118220</td>
+      <td>78992.1</td>
+      <td>51039.6</td>
+      <td>55979.8</td>
+      <td>83453.8</td>
+      <td>109428</td>
+      <td>99811.4</td>
+      <td>74338.8</td>
+      <td>...</td>
+      <td>22128.4</td>
+      <td>17393.3</td>
+      <td>18421.2</td>
+      <td>17597.1</td>
+      <td>15986.2</td>
+      <td>17074.8</td>
+      <td>13888</td>
+      <td>13766.8</td>
+      <td>16205.2</td>
+      <td>17489.6</td>
+    </tr>
+    <tr>
+      <th>4046</th>
+      <td>1036.74</td>
+      <td>674.28</td>
+      <td>794.7</td>
+      <td>1132</td>
+      <td>941.48</td>
+      <td>1184.27</td>
+      <td>1368.92</td>
+      <td>703.75</td>
+      <td>1022.15</td>
+      <td>842.4</td>
+      <td>...</td>
+      <td>2162.67</td>
+      <td>1832.24</td>
+      <td>1974.26</td>
+      <td>1892.05</td>
+      <td>1924.28</td>
+      <td>2046.96</td>
+      <td>1191.7</td>
+      <td>1191.92</td>
+      <td>1527.63</td>
+      <td>2894.77</td>
+    </tr>
+    <tr>
+      <th>4225</th>
+      <td>54454.8</td>
+      <td>44638.8</td>
+      <td>109150</td>
+      <td>71976.4</td>
+      <td>43838.4</td>
+      <td>48068</td>
+      <td>73672.7</td>
+      <td>101815</td>
+      <td>87315.6</td>
+      <td>64757.4</td>
+      <td>...</td>
+      <td>3194.25</td>
+      <td>1905.57</td>
+      <td>2482.65</td>
+      <td>1928.36</td>
+      <td>1368.32</td>
+      <td>1529.2</td>
+      <td>3431.5</td>
+      <td>2452.79</td>
+      <td>2981.04</td>
+      <td>2356.13</td>
+    </tr>
+    <tr>
+      <th>4770</th>
+      <td>48.16</td>
+      <td>58.33</td>
+      <td>130.5</td>
+      <td>72.58</td>
+      <td>75.78</td>
+      <td>43.61</td>
+      <td>93.26</td>
+      <td>80</td>
+      <td>85.34</td>
+      <td>113</td>
+      <td>...</td>
+      <td>8.93</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>727.94</td>
+      <td>727.01</td>
+      <td>224.53</td>
+    </tr>
+    <tr>
+      <th>Total Bags</th>
+      <td>8696.87</td>
+      <td>9505.56</td>
+      <td>8145.35</td>
+      <td>5811.16</td>
+      <td>6183.95</td>
+      <td>6683.91</td>
+      <td>8318.86</td>
+      <td>6829.22</td>
+      <td>11388.4</td>
+      <td>8625.92</td>
+      <td>...</td>
+      <td>16762.6</td>
+      <td>13655.5</td>
+      <td>13964.3</td>
+      <td>13776.7</td>
+      <td>12693.6</td>
+      <td>13498.7</td>
+      <td>9264.84</td>
+      <td>9394.11</td>
+      <td>10969.5</td>
+      <td>12014.1</td>
+    </tr>
+    <tr>
+      <th>Small Bags</th>
+      <td>8603.62</td>
+      <td>9408.07</td>
+      <td>8042.21</td>
+      <td>5677.4</td>
+      <td>5986.26</td>
+      <td>6556.47</td>
+      <td>8196.81</td>
+      <td>6266.85</td>
+      <td>11104.5</td>
+      <td>8061.47</td>
+      <td>...</td>
+      <td>16510.3</td>
+      <td>13401.9</td>
+      <td>13698.3</td>
+      <td>13553.5</td>
+      <td>12437.4</td>
+      <td>13066.8</td>
+      <td>8940.04</td>
+      <td>9351.8</td>
+      <td>10919.5</td>
+      <td>11988.1</td>
+    </tr>
+    <tr>
+      <th>Large Bags</th>
+      <td>93.25</td>
+      <td>97.49</td>
+      <td>103.14</td>
+      <td>133.76</td>
+      <td>197.69</td>
+      <td>127.44</td>
+      <td>122.05</td>
+      <td>562.37</td>
+      <td>283.83</td>
+      <td>564.45</td>
+      <td>...</td>
+      <td>252.25</td>
+      <td>253.56</td>
+      <td>266.06</td>
+      <td>223.18</td>
+      <td>256.22</td>
+      <td>431.85</td>
+      <td>324.8</td>
+      <td>42.31</td>
+      <td>50</td>
+      <td>26.01</td>
+    </tr>
+    <tr>
+      <th>XLarge Bags</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>conventional</td>
+      <td>...</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+      <td>organic</td>
+    </tr>
+    <tr>
+      <th>year</th>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>2015</td>
+      <td>...</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+      <td>2018</td>
+    </tr>
+    <tr>
+      <th>region</th>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>Albany</td>
+      <td>...</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+      <td>WestTexNewMexico</td>
+    </tr>
+    <tr>
+      <th>Day</th>
+      <td>27</td>
+      <td>20</td>
+      <td>13</td>
+      <td>06</td>
+      <td>29</td>
+      <td>22</td>
+      <td>15</td>
+      <td>08</td>
+      <td>01</td>
+      <td>25</td>
+      <td>...</td>
+      <td>11</td>
+      <td>04</td>
+      <td>25</td>
+      <td>18</td>
+      <td>11</td>
+      <td>04</td>
+      <td>28</td>
+      <td>21</td>
+      <td>14</td>
+      <td>07</td>
+    </tr>
+    <tr>
+      <th>Month</th>
+      <td>12</td>
+      <td>12</td>
+      <td>12</td>
+      <td>12</td>
+      <td>11</td>
+      <td>11</td>
+      <td>11</td>
+      <td>11</td>
+      <td>11</td>
+      <td>10</td>
+      <td>...</td>
+      <td>03</td>
+      <td>03</td>
+      <td>02</td>
+      <td>02</td>
+      <td>02</td>
+      <td>02</td>
+      <td>01</td>
+      <td>01</td>
+      <td>01</td>
+      <td>01</td>
+    </tr>
+  </tbody>
+</table>
+<p>16 rows × 18249 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">,</span> <span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">label_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">LabelEncoder</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[[</span><span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;Day&#39;</span><span class="p">,</span> <span class="s1">&#39;Month&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;Day&#39;</span><span class="p">,</span> <span class="s1">&#39;Month&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">label_dict</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">data</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;AveragePrice&#39;</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[13]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(12774, 13)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[98]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">filepath</span><span class="o">=</span><span class="s2">&quot;avocado-</span><span class="si">{epoch:02d}</span><span class="s2">-</span><span class="si">{val_loss:.2f}</span><span class="s2">.hdf5&quot;</span>
+<span class="n">model_ckpt</span> <span class="o">=</span> <span class="n">ModelCheckpoint</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">save_best_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+<span class="n">es</span> <span class="o">=</span> <span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">min_delta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">callbacks</span> <span class="o">=</span> <span class="p">[</span><span class="n">model_ckpt</span><span class="p">,</span> <span class="n">es</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[99]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">13</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">))</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13488,11 +14241,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[100]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lr</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.001</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">test_error</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span><span class="n">test_error</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Learning Rate&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -13508,44 +14257,34 @@ div#notebook {
     <div class="prompt"></div>
 
 
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense_55 (Dense)             (None, 16)                224       
+_________________________________________________________________
+dense_56 (Dense)             (None, 8)                 136       
+_________________________________________________________________
+dense_57 (Dense)             (None, 1)                 9         
+=================================================================
+Total params: 369
+Trainable params: 369
+Non-trainable params: 0
+_________________________________________________________________
+</pre>
+</div>
 </div>
 
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[105]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;max_depth&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span><span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;silent&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;objective&#39;</span><span class="p">:</span><span class="s1">&#39;binary:hinge&#39;</span><span class="p">}</span>
-<span class="n">num_round</span> <span class="o">=</span> <span class="mi">500</span>
-<span class="n">model_metrics</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">cv</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">num_round</span><span class="p">,</span> <span class="n">nfold</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
-</pre></div>
-
-    </div>
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[106]:</div>
+<div class="prompt input_prompt">In&nbsp;[101]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">),</span><span class="n">model_metrics</span><span class="p">[</span><span class="s1">&#39;test-error-mean&#39;</span><span class="p">],</span> <span class="n">s</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Test Error&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">500</span><span class="p">),</span><span class="n">model_metrics</span><span class="p">[</span><span class="s1">&#39;train-error-mean&#39;</span><span class="p">],</span> <span class="n">s</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Train Error&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">validation_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">callbacks</span> <span class="o">=</span> <span class="n">callbacks</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13561,16 +14300,255 @@ div#notebook {
     <div class="prompt"></div>
 
 
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Train on 12774 samples, validate on 5475 samples
+Epoch 1/40
+12774/12774 [==============================] - 2s 126us/step - loss: 2807968453.0568 - val_loss: 10274988.9596
+
+Epoch 00001: val_loss improved from inf to 10274988.95963, saving model to avocado-01-10274988.96.hdf5
+Epoch 2/40
+12774/12774 [==============================] - 1s 57us/step - loss: 9310287.0546 - val_loss: 4794927.5484
+
+Epoch 00002: val_loss improved from 10274988.95963 to 4794927.54840, saving model to avocado-02-4794927.55.hdf5
+Epoch 3/40
+12774/12774 [==============================] - 1s 58us/step - loss: 4720091.1448 - val_loss: 2599052.6609
+
+Epoch 00003: val_loss improved from 4794927.54840 to 2599052.66086, saving model to avocado-03-2599052.66.hdf5
+Epoch 4/40
+12774/12774 [==============================] - 1s 56us/step - loss: 2395575.2206 - val_loss: 1035682.3799
+
+Epoch 00004: val_loss improved from 2599052.66086 to 1035682.37990, saving model to avocado-04-1035682.38.hdf5
+Epoch 5/40
+12774/12774 [==============================] - 1s 57us/step - loss: 1176252.2443 - val_loss: 442940.6104
+
+Epoch 00005: val_loss improved from 1035682.37990 to 442940.61037, saving model to avocado-05-442940.61.hdf5
+Epoch 6/40
+12774/12774 [==============================] - 1s 57us/step - loss: 382684.5956 - val_loss: 103589.1652
+
+Epoch 00006: val_loss improved from 442940.61037 to 103589.16521, saving model to avocado-06-103589.17.hdf5
+Epoch 7/40
+12774/12774 [==============================] - 1s 57us/step - loss: 102618.2965 - val_loss: 35995.3213
+
+Epoch 00007: val_loss improved from 103589.16521 to 35995.32131, saving model to avocado-07-35995.32.hdf5
+Epoch 8/40
+12774/12774 [==============================] - 1s 57us/step - loss: 43944.2087 - val_loss: 17512.2465
+
+Epoch 00008: val_loss improved from 35995.32131 to 17512.24654, saving model to avocado-08-17512.25.hdf5
+Epoch 9/40
+12774/12774 [==============================] - 1s 57us/step - loss: 21300.8396 - val_loss: 8449.6287
+
+Epoch 00009: val_loss improved from 17512.24654 to 8449.62870, saving model to avocado-09-8449.63.hdf5
+Epoch 10/40
+12774/12774 [==============================] - 1s 57us/step - loss: 9818.1576 - val_loss: 4052.3710
+
+Epoch 00010: val_loss improved from 8449.62870 to 4052.37096, saving model to avocado-10-4052.37.hdf5
+Epoch 11/40
+12774/12774 [==============================] - 1s 57us/step - loss: 4098.9922 - val_loss: 1868.0047
+
+Epoch 00011: val_loss improved from 4052.37096 to 1868.00470, saving model to avocado-11-1868.00.hdf5
+Epoch 12/40
+12774/12774 [==============================] - 1s 56us/step - loss: 1762.0228 - val_loss: 946.0274
+
+Epoch 00012: val_loss improved from 1868.00470 to 946.02738, saving model to avocado-12-946.03.hdf5
+Epoch 13/40
+12774/12774 [==============================] - 1s 57us/step - loss: 847.7119 - val_loss: 568.6092
+
+Epoch 00013: val_loss improved from 946.02738 to 568.60919, saving model to avocado-13-568.61.hdf5
+Epoch 14/40
+12774/12774 [==============================] - 1s 58us/step - loss: 494.9650 - val_loss: 416.9525
+
+Epoch 00014: val_loss improved from 568.60919 to 416.95253, saving model to avocado-14-416.95.hdf5
+Epoch 15/40
+12774/12774 [==============================] - 1s 61us/step - loss: 332.0644 - val_loss: 338.9428
+
+Epoch 00015: val_loss improved from 416.95253 to 338.94275, saving model to avocado-15-338.94.hdf5
+Epoch 16/40
+12774/12774 [==============================] - 1s 59us/step - loss: 251.4944 - val_loss: 300.1280
+
+Epoch 00016: val_loss improved from 338.94275 to 300.12803, saving model to avocado-16-300.13.hdf5
+Epoch 17/40
+12774/12774 [==============================] - 1s 59us/step - loss: 208.7336 - val_loss: 274.0946
+
+Epoch 00017: val_loss improved from 300.12803 to 274.09463, saving model to avocado-17-274.09.hdf5
+Epoch 18/40
+12774/12774 [==============================] - 1s 59us/step - loss: 179.4421 - val_loss: 255.8776
+
+Epoch 00018: val_loss improved from 274.09463 to 255.87758, saving model to avocado-18-255.88.hdf5
+Epoch 19/40
+12774/12774 [==============================] - 1s 61us/step - loss: 155.8022 - val_loss: 240.9120
+
+Epoch 00019: val_loss improved from 255.87758 to 240.91204, saving model to avocado-19-240.91.hdf5
+Epoch 20/40
+12774/12774 [==============================] - 1s 56us/step - loss: 134.4904 - val_loss: 225.6607
+
+Epoch 00020: val_loss improved from 240.91204 to 225.66072, saving model to avocado-20-225.66.hdf5
+Epoch 21/40
+12774/12774 [==============================] - 1s 57us/step - loss: 113.4920 - val_loss: 212.1241
+
+Epoch 00021: val_loss improved from 225.66072 to 212.12408, saving model to avocado-21-212.12.hdf5
+Epoch 22/40
+12774/12774 [==============================] - 1s 57us/step - loss: 94.6087 - val_loss: 199.0658
+
+Epoch 00022: val_loss improved from 212.12408 to 199.06577, saving model to avocado-22-199.07.hdf5
+Epoch 23/40
+12774/12774 [==============================] - 1s 58us/step - loss: 77.1141 - val_loss: 185.3303
+
+Epoch 00023: val_loss improved from 199.06577 to 185.33034, saving model to avocado-23-185.33.hdf5
+Epoch 24/40
+12774/12774 [==============================] - 1s 56us/step - loss: 61.8408 - val_loss: 176.3605
+
+Epoch 00024: val_loss improved from 185.33034 to 176.36052, saving model to avocado-24-176.36.hdf5
+Epoch 25/40
+12774/12774 [==============================] - 1s 56us/step - loss: 48.5683 - val_loss: 168.5452
+
+Epoch 00025: val_loss improved from 176.36052 to 168.54520, saving model to avocado-25-168.55.hdf5
+Epoch 26/40
+12774/12774 [==============================] - 1s 57us/step - loss: 37.1715 - val_loss: 152.3271
+
+Epoch 00026: val_loss improved from 168.54520 to 152.32709, saving model to avocado-26-152.33.hdf5
+Epoch 27/40
+12774/12774 [==============================] - 1s 58us/step - loss: 27.8159 - val_loss: 147.0637
+
+Epoch 00027: val_loss improved from 152.32709 to 147.06368, saving model to avocado-27-147.06.hdf5
+Epoch 28/40
+12774/12774 [==============================] - 1s 63us/step - loss: 20.2086 - val_loss: 143.1168
+
+Epoch 00028: val_loss improved from 147.06368 to 143.11678, saving model to avocado-28-143.12.hdf5
+Epoch 29/40
+12774/12774 [==============================] - 1s 59us/step - loss: 14.4276 - val_loss: 122.0082
+
+Epoch 00029: val_loss improved from 143.11678 to 122.00825, saving model to avocado-29-122.01.hdf5
+Epoch 30/40
+12774/12774 [==============================] - 1s 57us/step - loss: 10.4560 - val_loss: 90.9256
+
+Epoch 00030: val_loss improved from 122.00825 to 90.92557, saving model to avocado-30-90.93.hdf5
+Epoch 31/40
+12774/12774 [==============================] - 1s 58us/step - loss: 7.8132 - val_loss: 66.7528
+
+Epoch 00031: val_loss improved from 90.92557 to 66.75284, saving model to avocado-31-66.75.hdf5
+Epoch 32/40
+12774/12774 [==============================] - 1s 59us/step - loss: 6.1247 - val_loss: 49.3973
+
+Epoch 00032: val_loss improved from 66.75284 to 49.39731, saving model to avocado-32-49.40.hdf5
+Epoch 33/40
+12774/12774 [==============================] - 1s 58us/step - loss: 5.1044 - val_loss: 34.2084
+
+Epoch 00033: val_loss improved from 49.39731 to 34.20841, saving model to avocado-33-34.21.hdf5
+Epoch 34/40
+12774/12774 [==============================] - 1s 58us/step - loss: 4.4122 - val_loss: 25.0560
+
+Epoch 00034: val_loss improved from 34.20841 to 25.05597, saving model to avocado-34-25.06.hdf5
+Epoch 35/40
+12774/12774 [==============================] - 1s 63us/step - loss: 3.8866 - val_loss: 21.1545
+
+Epoch 00035: val_loss improved from 25.05597 to 21.15453, saving model to avocado-35-21.15.hdf5
+Epoch 36/40
+12774/12774 [==============================] - 1s 63us/step - loss: 3.4361 - val_loss: 19.2374
+
+Epoch 00036: val_loss improved from 21.15453 to 19.23741, saving model to avocado-36-19.24.hdf5
+Epoch 37/40
+12774/12774 [==============================] - 1s 60us/step - loss: 3.0521 - val_loss: 17.4910
+
+Epoch 00037: val_loss improved from 19.23741 to 17.49101, saving model to avocado-37-17.49.hdf5
+Epoch 38/40
+12774/12774 [==============================] - 1s 63us/step - loss: 2.7292 - val_loss: 15.7763
+
+Epoch 00038: val_loss improved from 17.49101 to 15.77628, saving model to avocado-38-15.78.hdf5
+Epoch 39/40
+12774/12774 [==============================] - 1s 60us/step - loss: 2.4135 - val_loss: 14.0208
+
+Epoch 00039: val_loss improved from 15.77628 to 14.02075, saving model to avocado-39-14.02.hdf5
+Epoch 40/40
+12774/12774 [==============================] - 1s 61us/step - loss: 2.1118 - val_loss: 11.9952
+
+Epoch 00040: val_loss improved from 14.02075 to 11.99519, saving model to avocado-40-12.00.hdf5
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[101]:</div>
 
 
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;keras.callbacks.History at 0x1fcef35b6a0&gt;</pre>
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[102]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>5475/5475 [==============================] - 0s 26us/step
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[102]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>11.995191503812189</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
 </div>
 </div>
 
