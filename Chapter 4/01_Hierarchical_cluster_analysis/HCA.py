@@ -1,6 +1,6 @@
 # Unsupervised Learning
 
-# Part B - Hierarchical clustering
+# Hierarchical Cluster Analysis (HCA)
 
 # import data
 from sklearn import datasets
