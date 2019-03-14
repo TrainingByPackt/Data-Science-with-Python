@@ -1,6 +1,6 @@
 # Unsupervised Learning
 
-# Part A - k-means clustering WITHOUT PCA transformation
+# k-Means clustering
 
 # import data
 from sklearn import datasets
@@ -49,9 +49,11 @@ pd.value_counts(labels)
 df_shuffled['Predicted_Cluster'] = labels
 print(df_shuffled.head(5))
 
+# clear kernel
+
 ###############################################################################
 
-# ensemble of kmeans
+# Activity 2: k-Means clustering (ensemble)
 
 # import data
 from sklearn import datasets
@@ -97,11 +99,11 @@ labels_df['row_mode'] = labels_df.mode(axis=1)
 import pandas as pd
 pd.value_counts(labels_df['row_mode'])
 
-
+# clear kernel
 
 ###############################################################################
 
-# 2. Tuning n_clusters
+# k-Means clustering: Tuning n_clusters
 
 # import data
 from sklearn import datasets
@@ -126,10 +128,10 @@ scaled_features = scaler.transform(df_shuffled)
 # get inertia for every cluster
 from sklearn.cluster import KMeans
 inertia_list = []
-for i in range(10):
-    # instantiate pipeline
-    model = KMeans(n_clusters=i+1)
-    # fit pipeline
+for i in range(1, 11):
+    # instantiate model
+    model = KMeans(n_clusters=i)
+    # fit model
     model.fit(scaled_features)
     # get inertia
     inertia = model.inertia_
@@ -139,8 +141,7 @@ print(inertia_list)
     
 # plot inertia by n_clusters
 import matplotlib.pyplot as plt
-import numpy as np
-x = list(np.arange(1,11))
+x = list(range(1,11))
 y = inertia_list
 plt.plot(x, y)
 plt.title('Inertia by n_clusters')
@@ -152,13 +153,11 @@ plt.show()
 # get the inertia values for 3
 print('When n_clusters = 3, inertia = {:0.2f}'.format(y[2]))
 
-# now, let's get average inertia
-avg_inertia = np.mean(inertia_list)
-print('The mean inertia for the k-means analysis is {0:0.2f}'.format(avg_inertia))
+# clear kernel
 
 ###############################################################################
 
-# tuning inertia by n_clusters using an ensemble
+# Activity 3: tuning n_clusters using an ensembles
 
 # import data
 from sklearn import datasets
@@ -185,13 +184,13 @@ import numpy as np
 # create a list for the average inertia at each n_clusters
 mean_inertia_list = []
 # loop through n_clusters 1-10
-for x in range(10):
+for x in range(1, 11):
     # create a list for each individual inertia value at n_cluster
     inertia_list = []
     for i in range(100):
-        # instantiate pipeline
-        model = KMeans(n_clusters=x+1)
-        # fit pipeline
+        # instantiate model
+        model = KMeans(n_clusters=x)
+        # fit model
         model.fit(scaled_features)
         # get inertia
         inertia = model.inertia_
@@ -205,48 +204,26 @@ print(mean_inertia_list)
 
 # plot inertia by n_clusters
 import matplotlib.pyplot as plt
-import numpy as np
-x = list(np.arange(1,11))
+x = list(range(1, len(mean_inertia_list)+1))
 y = mean_inertia_list
 plt.plot(x, y)
-plt.title('Inertia by n_clusters')
+plt.title('Mean Inertia by n_clusters')
 plt.xlabel('n_clusters')
 plt.xticks(x)
-plt.ylabel('Inertia')
+plt.ylabel('Mean Inertia')
 plt.show()
 
 # get the inertia values for 3
-print('When n_clusters = 3, inertia = {:0.2f}'.format(y[2]))
+print('When n_clusters = 3, inertia = {0:0.2f}'.format(y[2]))
 
-# now, let's get average inertia
-avg_inertia = np.mean(mean_inertia_list)
-print('The mean inertia for the k-means analysis is {0:0.2f}'.format(avg_inertia))
+"""
+Without clearing the kernel, continue to the next section. 
+We do not want to clear the kernel because we need to keep mean_inertia_list
+in our environment, so we can plot inertia by n_clusters for original features
+and PCA transformed features in the same plot
+"""
 
-
-
-###############################################################################
-# k Means clustering with PCA transformation
-###############################################################################
-
-# import data
-from sklearn import datasets
-iris = datasets.load_iris()
-
-# save the features as df
-import pandas as pd
-df = pd.DataFrame(iris.data)
-
-# shuffle df
-from sklearn.utils import shuffle
-df_shuffled = shuffle(df, random_state=42)
-
-# standardize and fit model
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler()
-# Fit scaler to the features
-scaler.fit(df_shuffled)
-# Transform features to scaled version
-scaled_features = scaler.transform(df_shuffled)
+# Principal Component Analysis (PCA)
 
 # instantiate pca model
 from sklearn.decomposition import PCA
@@ -266,34 +243,14 @@ print('The total percentage of explained variance for the first 2 principal comp
 # transform X into X_pca
 df_pca = model.transform(scaled_features)
 
-###############################################################################
+"""
+Without clearing the kernel, continue to the next section. 
+We do not want to clear the kernel because we need to keep mean_inertia_list
+in our environment, so we can plot inertia by n_clusters for original features
+and PCA transformed features in the same plot
+"""
 
-# 2. Tuning n_components
-
-# import data
-from sklearn import datasets
-iris = datasets.load_iris()
-
-# save the features as df
-import pandas as pd
-df = pd.DataFrame(iris.data)
-
-# explore dimensions of data
-n_rows = df.shape[0]
-n_columns = df.shape[1]
-print('There are {} rows and {} columns in the Iris data set'.format(n_rows, n_columns))
-
-# shuffle df
-from sklearn.utils import shuffle
-df_shuffled = shuffle(df, random_state=42)
-
-# standardize and fit model
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler()
-# Fit scaler to the features
-scaler.fit(df_shuffled)
-# Transform features to scaled version
-scaled_features = scaler.transform(df_shuffled)
+# Principal Component Analysis: Tuning n_components
 
 # instantiate pca model
 from sklearn.decomposition import PCA
@@ -306,35 +263,46 @@ model.fit(scaled_features)
 df_pca = model.transform(scaled_features)
 
 # get the explained variance ratio for each component
-explained_var_ratios = model.explained_variance_ratio_
-print(explained_var_ratios)
+explained_var_ratio = model.explained_variance_ratio_
+print(explained_var_ratio)
 
 # get the cumulative sum of explained variance by each component
 import numpy as np
-cum_sum_explained_var = np.cumsum(explained_var_ratios)
+cum_sum_explained_var = np.cumsum(explained_var_ratio)
 print(cum_sum_explained_var)
 
 # set a threshold for % of variance in the data to preserve
-threshold = 95
+threshold = .95
 # programmatically check at which component we reach or surpass the threshold
-for i in np.arange(0, len(cum_sum_explained_var)):
-    if cum_sum_explained_var[i] >= (threshold/100):
+for i in range(len(cum_sum_explained_var)):
+    if cum_sum_explained_var[i] >= threshold:
         best_n_components = i+1
         break
     else:
         pass
 print('The best n_components is {}'.format(best_n_components))
 
-# plot cumulative xplained variance by n_components
+# plot cumulative explained variance by n_components
 import matplotlib.pyplot as plt
-plt.plot([x for x in np.arange(1, len(explained_var_ratios)+1)], cum_sum_explained_var, color='blue', label='Explained Variance')
-plt.title('{0} n_components are suggested to preserve {1}% of the variance'.format(best_n_components, threshold))
+x = list(range(1, len(explained_var_ratio)+1))
+y = cum_sum_explained_var
+plt.plot(x, y, color='blue', label='Explained Variance')
+plt.title('{0} n_components are suggested to preserve {1} of the variance'.format(best_n_components, threshold))
 plt.ylabel('Proportion of Explained Variance')
 plt.xlabel('n_components')
-plt.xticks(np.arange(1, len(explained_var_ratios)+1))
-plt.axhline(y=(threshold/100), color='gray', linestyle='--', label = '{}% Explained Variance'.format(threshold))
+plt.xticks(range(1, len(explained_var_ratio)+1))
+plt.axhline(y=threshold, color='gray', linestyle='--', label = '{} Explained Variance'.format(threshold))
 plt.legend(loc='best')
 plt.show()
+
+"""
+Without clearing the kernel, continue to the next section. 
+We do not want to clear the kernel because we need to keep mean_inertia_list
+and best_n_components in our environment, so we can plot inertia by n_clusters 
+for original features and PCA transformed features in the same plot
+"""
+
+# Activity 4: Evaluating model performance prior-to and after PCA transformation
 
 # now, we can fit it to the k-means algorithm
 from sklearn.decomposition import PCA
@@ -352,12 +320,12 @@ import numpy as np
 # create a list for the average inertia at each n_clusters
 mean_inertia_list_PCA = []
 # loop through n_clusters 1-10
-for x in range(10):
+for x in range(1, 11):
     # create a list for each individual inertia value at n_cluster
     inertia_list = []
     for i in range(100):
         # instantiate pipeline
-        model = KMeans(n_clusters=x+1)
+        model = KMeans(n_clusters=x)
         # fit pipeline
         model.fit(df_pca)
         # get inertia
@@ -370,29 +338,26 @@ for x in range(10):
     mean_inertia_list_PCA.append(mean_inertia)
 print(mean_inertia_list_PCA)  
     
-# plot inertia by n_clusters
+# plot inertia by n_clusters after PCA transformation
 import matplotlib.pyplot as plt
-import numpy as np
-x = list(np.arange(1,len(mean_inertia_list_PCA)+1))
+x = list(range(1, len(mean_inertia_list_PCA)+1))
 y = mean_inertia_list_PCA
 plt.plot(x, y)
-plt.title('Inertia by n_clusters')
+plt.title('Mean Inertia by n_clusters After PCA Transformation')
 plt.xlabel('n_clusters')
 plt.xticks(x)
-plt.ylabel('Inertia')
+plt.ylabel('Mean Inertia')
 plt.show()
 
 # print both lines on the same plot
-
 # plot inertia by n_clusters
 import matplotlib.pyplot as plt
-import numpy as np
-x = list(np.arange(1,len(mean_inertia_list_PCA)+1))
+x = list(range(1,len(mean_inertia_list_PCA)+1))
 y = mean_inertia_list_PCA
 y2 = mean_inertia_list 
 plt.plot(x, y, label='PCA')
 plt.plot(x, y2, label='No PCA')
-plt.title('Inertia by n_clusters')
+plt.title('Mean Inertia by n_clusters for Original Features and PCA Transformed Features')
 plt.xlabel('n_clusters')
 plt.xticks(x)
 plt.ylabel('Inertia')
