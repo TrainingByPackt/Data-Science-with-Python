@@ -7,6 +7,8 @@ Created on Wed Mar  6 14:21:21 2019
 
 # Supervised learning with LDA
 
+# Exercise 7: Fitting LDA model with default hyperparameters
+
 # import data
 from sklearn import datasets
 iris = datasets.load_iris()
@@ -63,7 +65,7 @@ print(cm)
 
 ###############################################################################
 
-# tune the model with gridsearchcv
+# Activity 3: Tuning LDA Hyperparameters using GridSearchCV
 
 # import data
 from sklearn import datasets
@@ -130,7 +132,7 @@ print(cm)
 
 ###############################################################################
 
-# tune in a pipeline
+# Exercise 8: Tuning LDA Hyperparameters in a Pipeline
 
 # import data
 from sklearn import datasets
