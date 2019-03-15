@@ -1,6 +1,6 @@
 # Unsupervised Learning
 
-# k-Means clustering
+# Exercise 2: Segmenting Iris into 2 Clusters using k-Means 
 
 # import data
 from sklearn import datasets
@@ -14,7 +14,7 @@ df = pd.DataFrame(iris.data)
 from sklearn.utils import shuffle
 df_shuffled = shuffle(df, random_state=42)
 
-# standardize and fit model
+# standardize
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 # Fit scaler to the features
@@ -53,7 +53,7 @@ print(df_shuffled.head(5))
 
 ###############################################################################
 
-# Activity 2: k-Means clustering (ensemble)
+# Activity 1: K-Means Clustering (ensemble) 
 
 # import data
 from sklearn import datasets
@@ -67,7 +67,7 @@ df = pd.DataFrame(iris.data)
 from sklearn.utils import shuffle
 df_shuffled = shuffle(df, random_state=42)
 
-# standardize and fit model
+# standardize
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 # Fit scaler to the features
@@ -103,7 +103,7 @@ pd.value_counts(labels_df['row_mode'])
 
 ###############################################################################
 
-# k-Means clustering: Tuning n_clusters
+# Exercise 3: K-means clustering: Tuning n_clusters 
 
 # import data
 from sklearn import datasets
@@ -117,7 +117,7 @@ df = pd.DataFrame(iris.data)
 from sklearn.utils import shuffle
 df_shuffled = shuffle(df, random_state=42)
 
-# standardize and fit model
+# standardize
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 # Fit scaler to the features
@@ -157,7 +157,7 @@ print('When n_clusters = 3, inertia = {:0.2f}'.format(y[2]))
 
 ###############################################################################
 
-# Activity 3: tuning n_clusters using an ensembles
+# Exercise 4: tuning n_clusters using ensembles
 
 # import data
 from sklearn import datasets
@@ -171,7 +171,7 @@ df = pd.DataFrame(iris.data)
 from sklearn.utils import shuffle
 df_shuffled = shuffle(df, random_state=42)
 
-# standardize and fit model
+# standardize
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 # Fit scaler to the features
@@ -223,7 +223,7 @@ in our environment, so we can plot inertia by n_clusters for original features
 and PCA transformed features in the same plot
 """
 
-# Principal Component Analysis (PCA)
+# Exercise 5: Principal Component Analysis (PCA) with 2 Principal Components
 
 # instantiate pca model
 from sklearn.decomposition import PCA
@@ -250,7 +250,7 @@ in our environment, so we can plot inertia by n_clusters for original features
 and PCA transformed features in the same plot
 """
 
-# Principal Component Analysis: Tuning n_components
+# Exerise 6: Principal Component Analysis: Tuning n_components
 
 # instantiate pca model
 from sklearn.decomposition import PCA
@@ -302,7 +302,7 @@ and best_n_components in our environment, so we can plot inertia by n_clusters
 for original features and PCA transformed features in the same plot
 """
 
-# Activity 4: Evaluating model performance prior-to and after PCA transformation
+# Activity 2: Evaluating model performance prior-to and after PCA transformation
 
 # now, we can fit it to the k-means algorithm
 from sklearn.decomposition import PCA
