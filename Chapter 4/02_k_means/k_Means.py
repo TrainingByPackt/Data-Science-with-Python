@@ -302,7 +302,7 @@ and best_n_components in our environment, so we can plot inertia by n_clusters
 for original features and PCA transformed features in the same plot
 """
 
-# Activity 2: Evaluating model performance prior-to and after PCA transformation
+# Activity 2: Evaluating mean inertia by cluster after PCA transformation
 
 # now, we can fit it to the k-means algorithm
 from sklearn.decomposition import PCA
@@ -338,19 +338,8 @@ for x in range(1, 11):
     mean_inertia_list_PCA.append(mean_inertia)
 print(mean_inertia_list_PCA)  
     
-# plot inertia by n_clusters after PCA transformation
-import matplotlib.pyplot as plt
-x = list(range(1, len(mean_inertia_list_PCA)+1))
-y = mean_inertia_list_PCA
-plt.plot(x, y)
-plt.title('Mean Inertia by n_clusters After PCA Transformation')
-plt.xlabel('n_clusters')
-plt.xticks(x)
-plt.ylabel('Mean Inertia')
-plt.show()
 
-# print both lines on the same plot
-# plot inertia by n_clusters
+# plot inertia by n_clusters with both lines
 import matplotlib.pyplot as plt
 x = list(range(1,len(mean_inertia_list_PCA)+1))
 y = mean_inertia_list_PCA
