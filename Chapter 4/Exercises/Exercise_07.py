@@ -1,4 +1,4 @@
-# Exercise 7: Fitting LDA model with default hyperparameters
+# Exercise 7: Supervised Data Reduction using Linear Discriminant Function Analysis (LDA) 
 
 # import data
 import pandas as pd
@@ -21,27 +21,43 @@ DV = 'Type'
 X = df_shuffled.drop(DV, axis=1)
 y = df_shuffled[DV]
 
-# Create train and test sets
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
-
-# instantiate an LDA model
+# instantiate model
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 model = LinearDiscriminantAnalysis()
 
-# fit model
+# fit model to X and y
+model.fit(X, y)
+
+# get the explained variance ratio
+model.explained_variance_ratio_
+
+# transform the features to the components
+df_lda = model.transform(X)
+
+# get the number of components
+print('The maximum number of components is {}'.format(df_lda.shape[1]))
+
+# split data into testing and training
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(df_lda, y, test_size=0.33, random_state=42)
+
+# create a random forest model
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier()
+
+# fit the model
 model.fit(X_train, y_train)
 
 # generate predictions
 predictions = model.predict(X_test)
 print(predictions)
 
-# evaluate performance using a confusion matrix
-from sklearn.metrics import confusion_matrix
-conf_matrix = confusion_matrix(y_test, predictions)
-print(conf_matrix)
+# generate confusion matrix
+from sklearn.metrics import confusion_matrix 
+conf_matrix = confusion_matrix(y_test, predictions) 
+print(conf_matrix) 
 
-# style the confusion matrix to make less confusing
+# style the confusion matrix
 import pandas as pd
 cm = pd.DataFrame(conf_matrix)
 import numpy as np
@@ -58,3 +74,6 @@ print(classification_report(y_test, predictions))
 # to get the accuracy score
 from sklearn.metrics import accuracy_score
 accuracy_score(y_test, predictions)
+
+
+

@@ -1,4 +1,4 @@
-# Exercise 8: Tuning LDA Hyperparameters using GridSearchCV
+# Exercise 8: LDA: Tuning n_components
 
 # import data
 import pandas as pd
@@ -21,63 +21,44 @@ DV = 'Type'
 X = df_shuffled.drop(DV, axis=1)
 y = df_shuffled[DV]
 
-# Create train and test sets
+# instantiate model
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+model = LinearDiscriminantAnalysis()
+
+# fit model to X and y
+model.fit(X, y)
+
+# get the explained variance ratio
+max_n_components = len(model.explained_variance_ratio_)
+print(max_n_components)
+
+# import dependencies
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
-
-# instantiate a grid with the possible values for hyperparamters (see documentation)
-import numpy as np
-grid = {'solver': ['lsqr', 'eigen'],
-        'shrinkage': [None, 'auto']}
-print(grid)
-
-# instantiate gridsearch model
-from sklearn.model_selection import GridSearchCV
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-model = GridSearchCV(LinearDiscriminantAnalysis(), grid, scoring='accuracy', cv=5)
-
-# fit the gridsearch model
-model.fit(X_train, y_train)
-
-# get a dictionary for best hyperparamters
-best_parameters = model.best_params_
-print(best_parameters)
-
-# get predictions
-predictions = model.predict(X_test)
-print(predictions)
-
-# evaluate performance using a confusion matrix
-from sklearn.metrics import confusion_matrix
-import pandas as pd
-cm = pd.DataFrame(confusion_matrix(y_test, predictions))
-import numpy as np
-cm['Total'] = np.sum(cm, axis=1)
-cm = cm.append(np.sum(cm, axis=0), ignore_index=True)
-cm.columns = ['Predicted 1', 'Predicted 2', 'Predicted 3', 'Total']
-cm = cm.set_index([['Actual 1', 'Actual 2', 'Actual 3', 'Total']])
-print(cm)
-
-# if we want a classification report
-from sklearn.metrics import classification_report
-print(classification_report(y_test, predictions))
-
-# to get the accuracy score
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
-accuracy_score(y_test, predictions)
 
-# refit LDA model with tuned parameters
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-model = LinearDiscriminantAnalysis(solver=best_parameters['solver'],
-                                   shrinkage=best_parameters['shrinkage'])
+accuracy_list = [] # instantiate an empty list for which to append accuracy scores
+for i in range(len(model.explained_variance_ratio_)):
+    model = LinearDiscriminantAnalysis(n_components=i+1) # instantiate model
+    model.fit(X, y) # fit model to X and y
+    df_lda = model.transform(X) # transform the features to the components
+    X_train, X_test, y_train, y_test = train_test_split(df_lda, y, test_size=0.33, random_state=42) # split data into testing and training
+    model = RandomForestClassifier() # create a random forest model
+    model.fit(X_train, y_train) # fit the model
+    predictions = model.predict(X_test) # generate predictions
+    accuracy = accuracy_score(y_test, predictions) # get the accuracy score
+    accuracy_list.append(accuracy) # append accuracy score to accuracy_list
+print(accuracy_list)
 
-# fit the model
-model.fit(X_train, y_train)
+# find the maximum of accuracy_list
+max_accuracy = max(accuracy_list)
+print(max_accuracy)
 
+# find the index of the maximum value in the list
+index_max_accuracy = accuracy_list.index(max_accuracy)
+print(index_max_accuracy)
 
-
-
-
-
-
+# Print off which number of n_components is best and what the accuracy percent is
+print('{0} component(s) are used to achieve {1:0.2f}% accuracy'.format(index_max_accuracy+1, max_accuracy*100))
 
