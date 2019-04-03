@@ -21,35 +21,38 @@ DV = 'Type'
 X = df_shuffled.drop(DV, axis=1)
 y = df_shuffled[DV]
 
+# split into testing and training before transforming into its components
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
 # instantiate model
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 model = LinearDiscriminantAnalysis()
 
-# fit model to X and y
-model.fit(X, y)
+# fit model to training data
+model.fit(X_train, y_train)
 
 # get the explained variance ratio
-model.explained_variance_ratio_
+print(model.explained_variance_ratio_)
 
-# transform the features to the components
-df_lda = model.transform(X)
+# transform the features to the components in the training data
+X_train_LDA = model.transform(X_train)
+
+# transform the features to the components in the test data
+X_test_LDA = model.transform(X_test)
 
 # get the number of components
-print('The maximum number of components is {}'.format(df_lda.shape[1]))
-
-# split data into testing and training
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(df_lda, y, test_size=0.33, random_state=42)
+print('The maximum number of components is {}'.format(X_train_LDA.shape[1]))
 
 # create a random forest model
 from sklearn.ensemble import RandomForestClassifier
 model = RandomForestClassifier()
 
-# fit the model
-model.fit(X_train, y_train)
+# fit the model on training data
+model.fit(X_train_LDA, y_train)
 
 # generate predictions
-predictions = model.predict(X_test)
+predictions = model.predict(X_test_LDA)
 print(predictions)
 
 # generate confusion matrix
