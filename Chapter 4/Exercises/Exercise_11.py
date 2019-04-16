@@ -1,35 +1,30 @@
-# Exercise 11: Fitting LDA Model
+# Exercise 11: Tuning LDA n_components
 
-# import data
-import pandas as pd
-df = pd.read_csv('glass_w_outcome.csv')
-
-# shuffle df
-from sklearn.utils import shuffle
-df_shuffled = shuffle(df, random_state=42)
-
-# Save the DV as DV
-DV = 'Type'
-
-# Get X's and y
-X = df_shuffled.drop(DV, axis=1)
-y = df_shuffled[DV]
-
-# standardize
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler() # create StandardScaler() object
-scaled_features = scaler.fit_transform(X) # fit scaler model and transform X
-
-# split into testing and training before transforming into its components
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(scaled_features, y, test_size=0.33, random_state=42)
-
-# instantiate LDA model
+# import dependencies
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-model = LinearDiscriminantAnalysis()
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 
-# fit the model on the training data
-model.fit(X_train, y_train)
+accuracy_list = [] # instantiate an empty list for which to append accuracy scores
+for i in range(2):
+    model = LinearDiscriminantAnalysis(n_components=i+1) # instantiate model
+    model.fit(X_train, y_train) # fit model to training data
+    X_train_LDA = model.transform(X_train) # transform the training features to the training components
+    X_test_LDA = model.transform(X_test) # transform the testing features to the testing components
+    model = RandomForestClassifier() # create a random forest model
+    model.fit(X_train_LDA, y_train) # fit the model on the training components
+    predictions = model.predict(X_test_LDA) # generate predictions on the testing components
+    accuracy = accuracy_score(y_test, predictions) # get the accuracy score
+    accuracy_list.append(accuracy) # append accuracy score to accuracy_list
+print(accuracy_list)
 
-# compute explained ratio by component
-model.explained_variance_ratio_
+# find the maximum of accuracy_list
+max_accuracy = max(accuracy_list)
+print(max_accuracy)
+
+# find the index of the maximum value in the list
+index_max_accuracy = accuracy_list.index(max_accuracy)
+print(index_max_accuracy)
+
+# Print off which number of n_components is best and what the accuracy percent is
+print('{0} component(s) are used to achieve {1:0.2f}% accuracy'.format(index_max_accuracy+1, max_accuracy*100))

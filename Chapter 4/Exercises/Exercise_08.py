@@ -1,25 +1,19 @@
-# Exercise 8: Fitting PCA Model
+# Exercise 8: Visual Comparison of Inertia by n_clusters
 
-# import data
-import pandas as pd
-df = pd.read_csv('glass.csv')
+# Continuing from Activity 2
 
-# shuffle df
-from sklearn.utils import shuffle
-df_shuffled = shuffle(df, random_state=42)
+# note: for this visualization to work properly, mean_inertia_list from exercise 5 must still be in the environment
 
-# standardize
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler() # instantiate scaler object
-scaled_features = scaler.fit_transform(df_shuffled) # fit and transform df_shuffled
-
-# instantiate PCA model
-from sklearn.decomposition import PCA
-model = PCA()
-
-# fit model
-model.fit(scaled_features)
-
-# get proportion of explained variance in each component
-explained_var_ratio = model.explained_variance_ratio_
-print(explained_var_ratio)
+# plot inertia by n_clusters with both lines
+import matplotlib.pyplot as plt
+x = list(range(1,len(mean_inertia_list_PCA)+1))
+y = mean_inertia_list_PCA
+y2 = mean_inertia_list 
+plt.plot(x, y, label='PCA')
+plt.plot(x, y2, label='No PCA')
+plt.title('Mean Inertia by n_clusters for Original Features and PCA Transformed Features')
+plt.xlabel('n_clusters')
+plt.xticks(x)
+plt.ylabel('Inertia')
+plt.legend()
+plt.show()

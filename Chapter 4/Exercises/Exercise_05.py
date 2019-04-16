@@ -1,13 +1,13 @@
-# Exercise 5: Assigning Predicted Clusters to Observations
+# Exercise 5: Plotting Mean Inertia by n_clusters
 
-# get predicted labels
-labels = model.labels_
-
-# see how many of each label we have
-import pandas as pd
-pd.value_counts(labels)
-
-# add label to df_shuffled
-df_shuffled['Predicted_Cluster'] = labels
-print(df_shuffled.head(5))
+# plot inertia by n_clusters
+import matplotlib.pyplot as plt
+x = list(range(1, len(mean_inertia_list)+1))
+y = mean_inertia_list
+plt.plot(x, y)
+plt.title('Mean Inertia by n_clusters')
+plt.xlabel('n_clusters')
+plt.xticks(x)
+plt.ylabel('Mean Inertia')
+plt.show()
 

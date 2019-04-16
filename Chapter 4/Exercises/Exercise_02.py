@@ -1,4 +1,4 @@
-# Exercise 2: Plotting HCA Model
+# Exercise 2: Plotting HCA Model and Assigning Predictions
 
 # plot dendrogram
 import matplotlib.pyplot as plt 
@@ -10,3 +10,13 @@ dendrogram(model,
            leaf_font_size=6)
 plt.show()
 
+# get labels
+from scipy.cluster.hierarchy import fcluster 
+labels = fcluster(model, t=9, criterion='distance')
+print(labels)
+
+# assign labels array as a column in df_shuffled
+df_shuffled['Predicted_Cluster'] = labels
+
+# preview data
+print(df_shuffled.head(5))
