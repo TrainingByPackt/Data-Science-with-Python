@@ -25,3 +25,11 @@ for i in range(100):
     labels = model.labels_ # get predicted labels
     labels_df['Model_{}_Labels'.format(i+1)] = labels # put the labels into the empty df
 
+# calculate mode for each row
+row_mode = labels_df.mode(axis=1)
+
+# assign the row_mode array as a column in labels_df
+labels_df['row_mode'] = row_mode
+
+# preview the data
+print(labels_df.head(5))
