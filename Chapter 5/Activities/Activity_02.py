@@ -29,7 +29,7 @@ plt.xlabel('Team') # create x label
 plt.ylabel('Number of Championships') # create y label
 plt.xticks(rotation=45) # rotate x tick labels 45 degrees
 plt.title(title) # title
-plt.savefig('Titles_by_Team.jpeg') # save figure to present working directory
+plt.savefig('Titles_by_Team') # save figure to present working directory
 plt.show() # print plot
 
 # Fix the cropping
@@ -39,5 +39,5 @@ plt.xlabel('Team')
 plt.ylabel('Number of Championships')
 plt.xticks(rotation=45)
 plt.title(title)
-plt.savefig('Titles_by_Team.jpeg', bbox_inches='tight') # fix the cropping issue
+plt.savefig('Titles_by_Team', bbox_inches='tight') # fix the cropping issue
 plt.show()
