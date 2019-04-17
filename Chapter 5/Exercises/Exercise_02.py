@@ -1,68 +1,56 @@
-# Exercise 2: Bar Plot
+# Exercise 2: Add a Second Line to Line Plot
 
-# create a list of groups
-x = ['Shirts', 'Pants','Shorts','Shoes']
-print(x)
+# continuing from exercise 1
 
-# create a list of revenue
-y = [1000, 1200, 800, 1800]
-print(y)
+# create another line for which to plot
+y2 = x**2
+print(y2)
 
-# create bar plot
+# add a line for y2
 import matplotlib.pyplot as plt
-plt.bar(x, y) # plot revenue by group
+plt.plot(x, y, 'D-k') # connect markers with a solid line
+plt.plot(x, y2) # add a line for y2
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed', fontsize=22) # increase font size
 plt.show()
 
-# style the plot
+# change color and style of y2
 import matplotlib.pyplot as plt
-plt.bar(x, y) # plot revenue by group
-plt.xlabel('Item Type') # x-axis label
-plt.ylabel('Sales Revenue ($)') # y-axis label
-plt.title('Sales Revenue by Item Type')
-plt.show() # print the plot
+plt.plot(x, y, 'D-k') # connect markers with a solid line
+plt.plot(x, y2, '--r') # make y2 a red, dotted line
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed', fontsize=22) # increase font size
+plt.show()
 
-# find the index of the greatest value in list y
-index_of_max_y = y.index(max(y))
-print(index_of_max_y)
-
-# determine the most sold item
-most_sold_item = x[index_of_max_y]
-print(most_sold_item)
-
-# make the title programmatic
+# create a legend
 import matplotlib.pyplot as plt
-plt.bar(x, y) # plot revenue by group
-plt.xlabel('Item Type') # x-axis label
-plt.ylabel('Sales Revenue ($)') # y-axis label
-plt.title('{} Produce the Most Sales Revenue'.format(most_sold_item)) # create programmatic title
-plt.show() # print the plot
+plt.plot(x, y, 'D-k', label='x cubed') # label as x cubed
+plt.plot(x, y2, '--r', label='x squared') # label as x squared
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed', fontsize=22) # increase font size
+plt.legend(loc='upper left') # create a plot legend and place it in the upper left
+plt.show()
 
-# make a horizontal bar plot
+# add multi-line, descriptive title
 import matplotlib.pyplot as plt
-plt.barh(x, y) # turn the plot horizontal
-plt.xlabel('Item Type') # x-axis label
-plt.ylabel('Sales Revenue ($)') # y-axis label
-plt.title('{} Produce the Most Sales Revenue'.format(most_sold_item)) # create programmatic title
-plt.show() # print the plot
+plt.plot(x, y, 'D-k', label='x cubed') # label as x cubed
+plt.plot(x, y2, '--r', label='x squared') # label as x squared
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('As x increases, \nx Cubed (black) increases \nat a Greater Rate than \nx Squared (red)', fontsize=22) # make a multi-line title
+plt.legend(loc='upper left') # create a plot legend and place it in the upper left
+plt.show()
 
-# switch the axes labels
+# change dimensions of plot
 import matplotlib.pyplot as plt
-plt.barh(x, y) # turn the plot horizontal
-plt.xlabel('Sales Revenue ($)') # x-axis label
-plt.ylabel('Item Type') # y-axis label
-plt.title('{} Produce the Most Sales Revenue'.format(most_sold_item)) # create programmatic title
-plt.show() # print the plot
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+plt.figure(figsize=(10,5)) # increase plot size
+plt.plot(x, y, 'D-k', label='x cubed') # label as x cubed
+plt.plot(x, y2, '--r', label='x squared') # label as x squared
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value')
+plt.title('As x increases, \nx Cubed (black) increases \nat a Greater Rate than \nx Squared (red)', fontsize=22) # make a multi-line title
+plt.legend(loc='upper left') # create a plot legend and place it in the upper left
+plt.show()

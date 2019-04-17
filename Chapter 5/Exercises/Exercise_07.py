@@ -1,56 +1,31 @@
-# Exercise 7: Multiple Line Plots Using Subplots
+# Exercise 7: Single Line Plot Using Subplots
+
 import numpy as np
 x = np.linspace(0, 10, 20) # create x
 y = x**3 # create y
-y2 = x**2 # create y2
 
-# create figure object with two subplots that are side-by-side
-import matplotlib.pyplot as plt
-fig, axes = plt.subplots(nrows=1, ncols=2)
+# create figure and a set of axes
+import matplotlib.pyplot as plt # import dependencies
+fig, axes = plt.subplots() # create figure and set of axes
 plt.show() # print plot
 
-# plot x on left axes
-import matplotlib.pyplot as plt
-fig, axes = plt.subplots(nrows=1, ncols=2)
-axes[0].plot(x, y) # plot x squared by y
+# call the plot object
+fig
+
+# create a line plot in the axes
+import matplotlib.pyplot as plt # import dependencies
+fig, axes = plt.subplots() # create figure and set of axes
+axes.plot(x, y) # generate line
 plt.show() # print plot
 
-# add axis labels for left axes
-import matplotlib.pyplot as plt
-fig, axes = plt.subplots(nrows=1, ncols=2)
-axes[0].plot(x, y) # plot x squared by y
-axes[0].set_xlabel('Linearly Spaced Numbers') # set x axis label
-axes[0].set_ylabel('y Value') # set y axis label
+# create styled plot
+import matplotlib.pyplot as plt # import matplotlib
+fig, axes = plt.subplots() # create figure and axes
+axes.plot(x, y, 'D-k') # create black line with diamond markers
+axes.set_xlabel('Linearly Spaced Numbers') # x label
+axes.set_ylabel('y Value') # y label
+axes.set_title('As x increases, y increases by x cubed') # set title
 plt.show() # print plot
 
-# style the right axes
-import matplotlib.pyplot as plt
-fig, axes = plt.subplots(nrows=1, ncols=2)
-axes[0].plot(x, y) # plot x-cubed by x
-axes[0].set_title('x by x Cubed') # set title
-axes[0].set_xlabel('Linearly Spaced Numbers') # set x axis label
-axes[0].set_ylabel('y Value') # set y axis label
-# plot on the right axes
-axes[1].plot(x, y2) # plot x-squared by x
-axes[1].set_title('x by x Squared') # set title
-axes[1].set_xlabel('Linearly Spaced Numbers') # set x axis label
-axes[1].set_ylabel('y Value') # set y axis label
-plt.show()
-
-# prevent plot overlap
-import matplotlib.pyplot as plt
-fig, axes = plt.subplots(nrows=1, ncols=2)
-axes[0].plot(x, y) # plot x-cubed by x
-axes[0].set_title('x by x Cubed') # set title
-axes[0].set_xlabel('Linearly Spaced Numbers') # set x axis label
-axes[0].set_ylabel('y Value') # set y axis label
-# plot on the right axes
-axes[1].plot(x, y2) # plot x-squared by x
-axes[1].set_title('x by x Squared') # set title
-axes[1].set_xlabel('Linearly Spaced Numbers') # set x axis label
-axes[1].set_ylabel('y Value') # set y axis label
-plt.tight_layout() # prevent plot overlap
-plt.show()
-
-# call the object
+# call the plot object
 fig

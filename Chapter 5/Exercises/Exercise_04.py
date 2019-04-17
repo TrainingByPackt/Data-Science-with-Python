@@ -1,56 +1,38 @@
-# Exercise 4: Scatterplot
+# Exercise 4: Histogram
 
-# generate list of numbers for height
-y = [5, 5.5, 5, 5.5, 6, 6.5, 6, 6.5, 7, 5.5, 5.25, 6, 5.25]
+# generate list of normally distributed numbers
+import numpy as np
+y = np.random.normal(loc=0, scale=0.1, size=100) # 100 numbers with mean of 0 and standard deviation of 0.1
 print(y)
-
-# create a list of numbers for weight
-x = [100, 150, 110, 140, 140, 170, 168, 165, 180, 125, 115, 155, 135]
-print(x)
 
 # create histogram
 import matplotlib.pyplot as plt
-plt.scatter(x, y) # generate scatterplot
-plt.xlabel('Weight') # label x-axis
-plt.ylabel('Height') # label y-axis
-plt.show() # print plot
+plt.hist(y, bins=20)
+plt.show()
 
-# calculate pearson correlations
-from scipy.stats import pearsonr
-correlation_coeff, p_value = pearsonr(x, y)
-print(correlation_coeff)
-
-# Set up some logic
-if correlation_coeff == 1.00:
-    title = 'There is a perfect positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff >= 0.8:
-    title = 'There is a very strong, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff >= 0.6:
-    title = 'There is a strong, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff >= 0.4:
-    title = 'There is a moderate, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff >= 0.2:
-    title = 'There is a weak, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff > 0:
-    title = 'There is a very weak, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff == 0:
-    title = 'There is no linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff <= -0.8:
-    title = 'There is a very strong, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff <= -0.6:
-    title = 'There is a strong, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff <= -0.4:
-    title = 'There is a moderate, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff <= -0.2:
-    title = 'There is a weak, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-else: 
-    title = 'There is a very weak, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-print(title)
-
-# Use title as title
+# label the axes
 import matplotlib.pyplot as plt
-plt.scatter(x, y) # generate scatterplot
-plt.xlabel('Weight') # label x-axis
-plt.ylabel('Height') # label y-axis
-plt.title(title) # set programmatic title
-plt.show() # print plot
+plt.hist(y, bins=20)
+plt.xlabel('y Value')
+plt.ylabel('Frequency')
+plt.show()
+
+# run the shapiro wilk test
+from scipy.stats import shapiro
+shap_w, shap_p = shapiro(y)
+print(shap_p)
+
+# set up some logic
+if shap_p > 0.05:
+    normal_YN = 'Fail to reject the null hypothesis. Data is normally distributed.'
+else:
+    normal_YN = 'Null hypothesis is rejected. Data is not normally distributed.'
+print(normal_YN)
+
+# re-create histogram
+import matplotlib.pyplot as plt
+plt.hist(y, bins=20)
+plt.xlabel('y Value')
+plt.ylabel('Frequency')
+plt.title(normal_YN) # programmatic plot title
+plt.show()

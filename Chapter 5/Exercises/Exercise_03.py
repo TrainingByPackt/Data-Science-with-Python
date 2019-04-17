@@ -1,31 +1,68 @@
-# Exercise 3: Histogram
+# Exercise 3: Bar Plot
 
-# generate list of normally distributed numbers
-import numpy as np
-y = np.random.normal(loc=0, scale=0.1, size=100) # 100 numbers with mean of 0 and standard deviation of 0.1
+# create a list of groups
+x = ['Shirts', 'Pants','Shorts','Shoes']
+print(x)
+
+# create a list of revenue
+y = [1000, 1200, 800, 1800]
 print(y)
 
-# create histogram
+# create bar plot
 import matplotlib.pyplot as plt
-plt.hist(y, bins=20)
+plt.bar(x, y) # plot revenue by group
 plt.show()
 
-# run the shapiro wilk test
-from scipy.stats import shapiro
-shap_w, shap_p = shapiro(y)
-print(shap_p)
-
-# set up some logic
-if shap_p > 0.05:
-    normal_YN = 'Fail to reject the null hypothesis. Data is normally distributed.'
-else:
-    normal_YN = 'Null hypothesis is rejected. Data is not normally distributed.'
-print(normal_YN)
-
-# re-create histogram
+# style the plot
 import matplotlib.pyplot as plt
-plt.hist(y, bins=20)
-plt.xlabel('y Value')
-plt.ylabel('Frequency')
-plt.title(normal_YN) # programmatic plot title
-plt.show()
+plt.bar(x, y) # plot revenue by group
+plt.xlabel('Item Type') # x-axis label
+plt.ylabel('Sales Revenue ($)') # y-axis label
+plt.title('Sales Revenue by Item Type')
+plt.show() # print the plot
+
+# find the index of the greatest value in list y
+index_of_max_y = y.index(max(y))
+print(index_of_max_y)
+
+# determine the most sold item
+most_sold_item = x[index_of_max_y]
+print(most_sold_item)
+
+# make the title programmatic
+import matplotlib.pyplot as plt
+plt.bar(x, y) # plot revenue by group
+plt.xlabel('Item Type') # x-axis label
+plt.ylabel('Sales Revenue ($)') # y-axis label
+plt.title('{} Produce the Most Sales Revenue'.format(most_sold_item)) # create programmatic title
+plt.show() # print the plot
+
+# make a horizontal bar plot
+import matplotlib.pyplot as plt
+plt.barh(x, y) # turn the plot horizontal
+plt.xlabel('Item Type') # x-axis label
+plt.ylabel('Sales Revenue ($)') # y-axis label
+plt.title('{} Produce the Most Sales Revenue'.format(most_sold_item)) # create programmatic title
+plt.show() # print the plot
+
+# switch the axes labels
+import matplotlib.pyplot as plt
+plt.barh(x, y) # turn the plot horizontal
+plt.xlabel('Sales Revenue ($)') # x-axis label
+plt.ylabel('Item Type') # y-axis label
+plt.title('{} Produce the Most Sales Revenue'.format(most_sold_item)) # create programmatic title
+plt.show() # print the plot
+
+
+
+
+
+
+
+
+
+
+
+
+
+

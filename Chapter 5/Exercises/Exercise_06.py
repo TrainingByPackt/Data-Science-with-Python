@@ -1,31 +1,56 @@
-# Exercise 6: Single Line Plot Using Subplots
+# Exercise 6: Scatterplot
 
-import numpy as np
-x = np.linspace(0, 10, 20) # create x
-y = x**3 # create y
+# generate list of numbers for height
+y = [5, 5.5, 5, 5.5, 6, 6.5, 6, 6.5, 7, 5.5, 5.25, 6, 5.25]
+print(y)
 
-# create figure and a set of axes
-import matplotlib.pyplot as plt # import dependencies
-fig, axes = plt.subplots() # create figure and set of axes
+# create a list of numbers for weight
+x = [100, 150, 110, 140, 140, 170, 168, 165, 180, 125, 115, 155, 135]
+print(x)
+
+# create histogram
+import matplotlib.pyplot as plt
+plt.scatter(x, y) # generate scatterplot
+plt.xlabel('Weight') # label x-axis
+plt.ylabel('Height') # label y-axis
 plt.show() # print plot
 
-# call the plot object
-fig
+# calculate pearson correlations
+from scipy.stats import pearsonr
+correlation_coeff, p_value = pearsonr(x, y)
+print(correlation_coeff)
 
-# create a line plot in the axes
-import matplotlib.pyplot as plt # import dependencies
-fig, axes = plt.subplots() # create figure and set of axes
-axes.plot(x, y) # generate line
+# Set up some logic
+if correlation_coeff == 1.00:
+    title = 'There is a perfect positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+elif correlation_coeff >= 0.8:
+    title = 'There is a very strong, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+elif correlation_coeff >= 0.6:
+    title = 'There is a strong, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+elif correlation_coeff >= 0.4:
+    title = 'There is a moderate, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+elif correlation_coeff >= 0.2:
+    title = 'There is a weak, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+elif correlation_coeff > 0:
+    title = 'There is a very weak, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+elif correlation_coeff == 0:
+    title = 'There is no linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+elif correlation_coeff <= -0.8:
+    title = 'There is a very strong, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+elif correlation_coeff <= -0.6:
+    title = 'There is a strong, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+elif correlation_coeff <= -0.4:
+    title = 'There is a moderate, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+elif correlation_coeff <= -0.2:
+    title = 'There is a weak, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+else: 
+    title = 'There is a very weak, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
+print(title)
+
+# Use title as title
+import matplotlib.pyplot as plt
+plt.scatter(x, y) # generate scatterplot
+plt.xlabel('Weight') # label x-axis
+plt.ylabel('Height') # label y-axis
+plt.title(title) # set programmatic title
 plt.show() # print plot
-
-# create styled plot
-import matplotlib.pyplot as plt # import matplotlib
-fig, axes = plt.subplots() # create figure and axes
-axes.plot(x, y, 'D-k') # create black line with diamond markers
-axes.set_xlabel('Linearly Spaced Numbers') # x label
-axes.set_ylabel('y Value') # y label
-axes.set_title('As x increases, y increases by x cubed') # set title
-plt.show() # print plot
-
-# call the plot object
-fig
