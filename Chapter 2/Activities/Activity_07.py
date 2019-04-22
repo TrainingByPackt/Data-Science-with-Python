@@ -1,9 +1,9 @@
-# Exercise 3: Generating predictions and evaluating performance of simple linear regression model
+# Activity 7: Generating predictions and evaluating performance of tuned random forest regressor model
 
-# continuing from Exercise 2: 
+# continuing from Exercise 13:
 
 # generate predictions on the test data
-predictions = model.predict(X_test[['Humidity']])
+predictions = model.predict(X_test)
 
 # plot correlation of predicted and actual values
 import matplotlib.pyplot as plt
@@ -35,6 +35,3 @@ metrics_df = pd.DataFrame({'Metric': ['MAE',
                                     np.sqrt(metrics.mean_squared_error(y_test, predictions)),
                                     metrics.explained_variance_score(y_test, predictions)]}).round(3)
 print(metrics_df)
-
-
-

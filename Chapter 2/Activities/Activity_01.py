@@ -8,7 +8,6 @@ predictions = model.predict(X_test)
 # plot correlation of predicted and actual values
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
-
 plt.scatter(y_test, predictions)
 plt.xlabel('Y Test (True Values)')
 plt.ylabel('Predicted Values')
@@ -18,7 +17,6 @@ plt.show()
 # plot distribution of residuals
 import seaborn as sns
 from scipy.stats import shapiro
-
 sns.distplot((y_test - predictions), bins = 50)
 plt.xlabel('Residuals')
 plt.ylabel('Density')
@@ -28,7 +26,6 @@ plt.show()
 # compute metrics and put into a dataframe
 from sklearn import metrics
 import numpy as np
-
 metrics_df = pd.DataFrame({'Metric': ['MAE', 
                                       'MSE', 
                                       'RMSE', 

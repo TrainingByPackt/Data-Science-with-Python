@@ -1,4 +1,4 @@
-# Exercise 5: Fitting a logistic regression model
+# Exercise 5: Fitting a logistic regression model and determining the intercept and coefficient
 
 # import data
 import pandas as pd

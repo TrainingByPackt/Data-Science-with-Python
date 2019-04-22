@@ -1,22 +1,12 @@
-# Exercise 1: Preparing data for linear regression model
+# Exercise 12: Preparing data for random forest regressor pipeline
 
 # import data
 import pandas as pd
 df = pd.read_csv('weather.csv')
 
-# check info
-df.info() 
-
-# get number of levels in 'Summary'
-levels = len(pd.value_counts(df['Description']))
-print('There are {} levels in the Description column'.format(levels))
-
 # dummy code 'Summary'
 import pandas as pd
 df_dummies = pd.get_dummies(df, drop_first=True)
-
-# check info
-print('There are {} columns in df_dummies'.format(df_dummies.shape[1]))
 
 # shuffle df_dummies
 from sklearn.utils import shuffle

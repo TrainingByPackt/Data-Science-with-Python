@@ -1,8 +1,6 @@
-# Exercise 6: Generating predictions and evaluating performance of logistic regression model
+# Activity 5: Generating predictions and evaluating performance of decision tree classifier model
 
-# continuing from Exercise 5:
-
-# generate predicted probabilities of yes
+# generate predicted probabilities of rain
 predicted_prob = model.predict_proba(X_test)[:,1]
 
 # generate predicted classes
@@ -18,8 +16,8 @@ cm.columns = ['Predicted No', 'Predicted Yes', 'Total']
 cm = cm.set_index([['Actual No', 'Actual Yes', 'Total']])
 print(cm)
 
-
 # generate a classification report
 from sklearn.metrics import classification_report
 print(classification_report(y_test, predicted_class))
+
 
