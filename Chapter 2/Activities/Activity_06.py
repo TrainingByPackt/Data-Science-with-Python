@@ -1,5 +1,7 @@
 # Activity 6: Scaling features and tuning a random forest regressor in a pipeline
 
+# continuing from Exercise 12
+
 # Set up the steps for a pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
