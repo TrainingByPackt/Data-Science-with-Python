@@ -1,5 +1,7 @@
 # Exercise 5: Fitting a logistic regression model and determining the intercept and coefficient
 
+# clear environment prior to running this code
+
 # import data
 import pandas as pd
 df = pd.read_csv('weather.csv')

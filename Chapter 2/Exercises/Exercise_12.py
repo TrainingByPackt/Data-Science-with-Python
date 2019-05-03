@@ -1,5 +1,7 @@
 # Exercise 12: Preparing data for random forest regressor pipeline
 
+# clear environment prior to running this code
+
 # import data
 import pandas as pd
 df = pd.read_csv('weather.csv')

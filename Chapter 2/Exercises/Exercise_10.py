@@ -1,5 +1,7 @@
 # Exercise 10: Tuning decision tree classifier using grid search in pipeline
 
+# continuing from Activity 4:
+
 # Set up the steps for a pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier

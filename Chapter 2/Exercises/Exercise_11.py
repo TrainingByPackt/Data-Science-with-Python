@@ -36,3 +36,8 @@ plt.ylabel('Variable')
 plt.legend(loc=4)
 plt.show()
 
+
+
+
+
+

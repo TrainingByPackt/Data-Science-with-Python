@@ -1,5 +1,7 @@
 # Exercise 13: Programmatically extracting tuned hyperparameters and determining feature importance from random forest regressor grid search model
 
+# continuing from Activity 6
+
 # instantiate model
 from sklearn.ensemble import RandomForestRegressor
 model = RandomForestRegressor(criterion=best_parameters['Forest__criterion'],

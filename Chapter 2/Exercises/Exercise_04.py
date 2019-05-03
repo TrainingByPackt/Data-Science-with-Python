@@ -1,6 +1,6 @@
 # Exercise 4: Fitting a multiple linear regression model and determining the intercept and coefficient
 
-# continuing from Exercise 1:
+# continuing from Exercise 3:
 
 # instantiate linear regression model
 from sklearn.linear_model import LinearRegression
