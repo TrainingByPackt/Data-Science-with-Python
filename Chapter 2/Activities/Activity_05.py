@@ -1,5 +1,7 @@
 # Activity 5: Generating predictions and evaluating performance of decision tree classifier model
 
+# continuing from Exercise 11:
+
 # generate predicted probabilities of rain
 predicted_prob = model.predict_proba(X_test)[:,1]
 

@@ -1,5 +1,7 @@
 # Exercise 8: Preparing data for support vector classifier
 
+# clear environment prior to running this code
+
 # import data
 import pandas as pd
 df = pd.read_csv('weather.csv')

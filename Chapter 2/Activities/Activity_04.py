@@ -1,5 +1,7 @@
 # Activity 4: Prepare data for decision tree classifier pipeline
 
+# clear environment prior to running this code
+
 # import data
 import pandas as pd
 df = pd.read_csv('weather.csv')
