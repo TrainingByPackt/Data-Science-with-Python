@@ -4,14 +4,14 @@
 
 # instantiate model
 from sklearn.ensemble import RandomForestRegressor
-model = RandomForestRegressor(criterion=best_parameters['Forest__criterion'],
-                              max_features=best_parameters['Forest__max_features'],
-                              min_impurity_decrease=best_parameters['Forest__min_impurity_decrease'],
-                              bootstrap=best_parameters['Forest__bootstrap'],
-                              warm_start=best_parameters['Forest__warm_start'])
+model = RandomForestRegressor(criterion=best_parameters['criterion'],
+                              max_features=best_parameters['max_features'],
+                              min_impurity_decrease=best_parameters['min_impurity_decrease'],
+                              bootstrap=best_parameters['bootstrap'],
+                              warm_start=best_parameters['warm_start'])
 
 # fit model
-model.fit(X_train, y_train)
+model.fit(X_train_scaled, y_train)
 
 # plot feature importance in descending order
 import pandas as pd

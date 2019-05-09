@@ -19,14 +19,17 @@ DV = 'Rain' # Save the DV as DV
 X = df_shuffled.drop(DV, axis=1) # get features (X)
 y = df_shuffled[DV] # get DV (y)
 
-# scale X
-from sklearn.preprocessing import StandardScaler
-model = StandardScaler() # instantiate StandardScaler model
-X_scaled = model.fit_transform(X) # transform the features to z-scores
-
 # split X and y into testing and training data
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
+# scale X_train and X_test
+from sklearn.preprocessing import StandardScaler
+model = StandardScaler() # instantiate StandardScaler model
+X_train_scaled = model.fit_transform(X_train) # transform X_train to z-scores
+X_test_scaled = model.fit_transform(X_test) # transform X_test to z-scores
+
+
 
 
 

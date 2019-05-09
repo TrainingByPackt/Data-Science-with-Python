@@ -2,22 +2,19 @@
 
 # continuing from Exercise 10:
 
-# print best_paramters dictionary
-print(best_parameters)
-
 # access the 'Tree__criterion' value
-print(best_parameters['Tree__criterion'])
+print(best_parameters['criterion'])
 
 # instantiate model
 from sklearn.tree import DecisionTreeClassifier
-model = DecisionTreeClassifier(class_weight=best_parameters['Tree__class_weight'],
-                               criterion=best_parameters['Tree__criterion'],
-                               min_impurity_decrease=best_parameters['Tree__min_impurity_decrease'],
-                               min_weight_fraction_leaf=best_parameters['Tree__min_weight_fraction_leaf'],
-                               presort=best_parameters['Tree__presort'])
+model = DecisionTreeClassifier(class_weight=best_parameters['class_weight'],
+                               criterion=best_parameters['criterion'],
+                               min_impurity_decrease=best_parameters['min_impurity_decrease'],
+                               min_weight_fraction_leaf=best_parameters['min_weight_fraction_leaf'],
+                               presort=best_parameters['presort'])
 
-# fit model
-model.fit(X_train, y_train)
+# scale X_train and fit model
+model.fit(X_train_scaled, y_train)
 
 # extract feature_importances attribute
 print(model.feature_importances_)
