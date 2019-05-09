@@ -15,21 +15,22 @@ DV = 'Type'
 X = df_shuffled.drop(DV, axis=1)
 y = df_shuffled[DV]
 
-# standardize
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler() # create StandardScaler() object
-scaled_features = scaler.fit_transform(X) # fit scaler model and transform X
-
 # split into testing and training before transforming into its components
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(scaled_features, y, test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
+# standardize X_train and X_test
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler() # create StandardScaler() object
+X_train_scaled = scaler.fit_transform(X_train) # fit scaler model and transform X_train
+X_test_scaled = scaler.fit_transform(X_test) # fit scaler model and transform X_test
 
 # instantiate LDA model
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 model = LinearDiscriminantAnalysis()
 
 # fit the model on the training data
-model.fit(X_train, y_train)
+model.fit(X_train_scaled, y_train)
 
 # compute explained ratio by component
 model.explained_variance_ratio_
