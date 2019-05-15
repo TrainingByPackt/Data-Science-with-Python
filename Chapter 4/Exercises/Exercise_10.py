@@ -18,9 +18,6 @@ model.fit(X_train_LDA, y_train)
 # generate predictions on the testing components
 predictions = model.predict(X_test_LDA) 
 
-# generate confusion matrix
-print(conf_matrix) 
-
 # style the confusion matrix
 from sklearn.metrics import confusion_matrix 
 import pandas as pd
