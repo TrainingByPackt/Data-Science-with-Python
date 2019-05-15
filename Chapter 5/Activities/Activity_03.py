@@ -80,6 +80,29 @@ axes[2,0].set_title('Scatter')
 axes[2,1].set_title('Box-and-Whisker')
 plt.tight_layout() # prevent plot overlap
 
+# add scatterplot
+import matplotlib.pyplot as plt
+fig, axes = plt.subplots(nrows=3, ncols=2)
+# line plot (top left)
+axes[0,0].plot(Items_by_Week['Week'], Items_by_Week['Items_Sold']) # for line plot
+axes[0,0].set_title('Line')
+# Bar plot (top right)
+axes[0,1].bar(Items_by_Week['Week'], Items_by_Week['Items_Sold']) # for bar plot
+axes[0,1].set_title('Bar')
+# Horizontal bar plot (middle left)
+axes[1,0].barh(Items_by_Week['Week'], Items_by_Week['Items_Sold']) # for horizontal bar plot
+axes[1,0].set_title('Horizontal Bar')
+# Histogram (middle right)
+axes[1,1].hist(y, bins=20) # for histogram
+axes[1,1].set_title('Histogram') 
+# Scatterplot (bottom left)
+axes[2,0].scatter(Weight_by_Height['Height'], Weight_by_Height['Weight']) # for scatterplot
+axes[2,0].set_title('Scatter')
+# Box-and-Whisker
+axes[2,1].boxplot(y) # for Box-and-Whisker
+axes[2,1].set_title('Box-and-Whisker')
+plt.tight_layout() # prevent plot overlap
+
 # Set x- and y-axis for each subplot
 import matplotlib.pyplot as plt
 fig, axes = plt.subplots(nrows=3, ncols=2)
