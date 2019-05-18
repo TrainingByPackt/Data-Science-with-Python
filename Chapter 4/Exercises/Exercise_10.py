@@ -3,10 +3,10 @@
 # Continuing from Exercise 9:
 
 # transform the training features to the training components
-X_train_LDA = model.transform(X_train) 
+X_train_LDA = model.transform(X_train_scaled) 
 
 # transform the testing features to the testing components
-X_test_LDA = model.transform(X_test) 
+X_test_LDA = model.transform(X_test_scaled) 
 
 # create a random forest model
 from sklearn.ensemble import RandomForestClassifier
@@ -18,15 +18,11 @@ model.fit(X_train_LDA, y_train)
 # generate predictions on the testing components
 predictions = model.predict(X_test_LDA) 
 
-# generate confusion matrix
-from sklearn.metrics import confusion_matrix 
-conf_matrix = confusion_matrix(y_test, predictions) 
-print(conf_matrix) 
-
 # style the confusion matrix
+from sklearn.metrics import confusion_matrix 
 import pandas as pd
-cm = pd.DataFrame(conf_matrix)
 import numpy as np
+cm = pd.DataFrame(confusion_matrix(y_test, predictions))
 cm['Total'] = np.sum(cm, axis=1)
 cm = cm.append(np.sum(cm, axis=0), ignore_index=True)
 cm.columns = ['Predicted 1', 'Predicted 2', 'Predicted 3', 'Total']

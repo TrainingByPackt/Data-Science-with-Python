@@ -22,3 +22,9 @@ y = df_shuffled[DV] # get DV (y)
 # split X and y into testing and training data
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
+# scale X_train and X_test
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.fit_transform(X_test)

@@ -3,10 +3,10 @@
 # continuing from Exercise 11:
 
 # generate predicted probabilities of rain
-predicted_prob = model.predict_proba(X_test)[:,1]
+predicted_prob = model.predict_proba(X_test_scaled)[:,1]
 
 # generate predicted classes
-predicted_class = model.predict(X_test)
+predicted_class = model.predict(X_test_scaled)
 
 # evaluate performance with confusion matrix
 from sklearn.metrics import confusion_matrix
