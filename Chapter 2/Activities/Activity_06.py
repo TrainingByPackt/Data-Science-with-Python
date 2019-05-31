@@ -1,4 +1,4 @@
-# Activity 6: Scaling features and tuning a random forest regressor in a pipeline
+# Activity 6: Tuning a random forest regressor
 
 # continuing from Exercise 12
 
