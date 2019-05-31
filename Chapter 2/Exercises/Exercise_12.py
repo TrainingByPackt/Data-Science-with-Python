@@ -1,4 +1,4 @@
-# Exercise 12: Preparing data for random forest regressor pipeline
+# Exercise 12: Preparing data for random forest regressor
 
 # clear environment prior to running this code
 
@@ -27,4 +27,4 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.fit_transform(X_test)
+X_test_scaled = scaler.transform(X_test)

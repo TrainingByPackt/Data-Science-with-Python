@@ -27,7 +27,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler() # instantiate StandardScaler model
 X_train_scaled = scaler.fit_transform(X_train) # transform X_train to z-scores
-X_test_scaled = scaler.fit_transform(X_test) # transform X_test to z-scores
+X_test_scaled = scaler.transform(X_test) # transform X_test to z-scores
 
 
 
