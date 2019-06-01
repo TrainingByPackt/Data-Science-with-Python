@@ -1,5 +1,7 @@
 # Exercise 2: Plotting HCA Model and Assigning Predictions
 
+# continuing from exercise 1:
+
 # plot dendrogram
 import matplotlib.pyplot as plt 
 from scipy.cluster.hierarchy import dendrogram
