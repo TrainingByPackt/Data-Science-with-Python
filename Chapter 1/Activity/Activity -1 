@@ -1,5 +1,0 @@
-import pandas as pd
-
-df = pd.read_csv("Wholesale customers data.csv")
-
-df.head()
