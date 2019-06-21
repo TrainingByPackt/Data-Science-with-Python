@@ -1,4 +1,4 @@
-# Master Data Science with Python
+# Data Science with Python
 
 
 #### Please note
