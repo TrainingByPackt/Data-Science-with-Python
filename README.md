@@ -3,7 +3,7 @@
 # Data Science with Python
 Data Science with Python will help you get comfortable with using the Python environment for data science. You will learn all the libraries that a data scientist uses on a daily basis. By the end of this book, you will be able to take a large raw dataset, clean it, manipulate it, and run machine learning algorithms to obtain results that influence business decisions. 
 
-Advanced JavaScript by Rohan Chopra, Aaron England and Mohamed Noordeen
+Data Science with Python by Rohan Chopra, Aaron England and Mohamed Noordeen
 
 ## What you will learn
 *	Pre-process data to make it ready to use for machine learning
