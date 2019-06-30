@@ -38,5 +38,5 @@ You'll also need the following software installed in advance:
 #### Please note
 You can download the dataset for the following lessons from the respective URL:
 
-Lesson 06, Lesson 07 and Lesson 08: https://github.com/PacktPublishing/Datasets-of-Master-Data-Science-with-Python
+Lesson 06, Lesson 07 and Lesson 08: https://drive.google.com/drive/folders/1SZ7vVby_gfb8Isu4b-fJlSJBfqDCsCVh?usp=sharing
 Lesson 06 and Lesson 08 use the same dataset
