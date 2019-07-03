@@ -1,21 +1,31 @@
-# Exercise 7: Tuning hyperparameters of logistic regression model
+# Exercise 7: Single Line Plot Using Subplots
 
-# continuing from Exercise 6:
-
-# instantiate a grid with the possible values for hyperparamters (see documentation)
 import numpy as np
-grid = {'penalty': ['l1', 'l2'],
-        'C': np.linspace(1, 10, 10)}
+x = np.linspace(0, 10, 20) # create x
+y = x**3 # create y
 
-# instantiate GridSearchCV model
-from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import LogisticRegression
-model = GridSearchCV(LogisticRegression(solver='liblinear'), grid, scoring='f1', cv=5)
+# create figure and a set of axes
+import matplotlib.pyplot as plt # import dependencies
+fig, axes = plt.subplots() # create figure and set of axes
+plt.show() # print plot
 
-# fit the gridsearch model
-model.fit(X_train, y_train)
+# call the plot object
+fig
 
-# print the best parameters
-best_parameters = model.best_params_
-print(best_parameters)
+# create a line plot in the axes
+import matplotlib.pyplot as plt # import dependencies
+fig, axes = plt.subplots() # create figure and set of axes
+axes.plot(x, y) # generate line
+plt.show() # print plot
 
+# create styled plot
+import matplotlib.pyplot as plt # import matplotlib
+fig, axes = plt.subplots() # create figure and axes
+axes.plot(x, y, 'D-k') # create black line with diamond markers
+axes.set_xlabel('Linearly Spaced Numbers') # x label
+axes.set_ylabel('y Value') # y label
+axes.set_title('As x increases, y increases by x cubed') # set title
+plt.show() # print plot
+
+# call the plot object
+fig

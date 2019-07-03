@@ -1,68 +1,33 @@
-# Exercise 3: Bar Plot
+# Exercise 3: Fitting k-Means Model and Assigning Predictions
 
-# create a list of groups
-x = ['Shirts', 'Pants','Shorts','Shoes']
-print(x)
+# import data
+import pandas as pd
+df = pd.read_csv('glass.csv')
 
-# create a list of revenue
-y = [1000, 1200, 800, 1800]
-print(y)
+# shuffle df
+from sklearn.utils import shuffle
+df_shuffled = shuffle(df, random_state=42)
 
-# create bar plot
-import matplotlib.pyplot as plt
-plt.bar(x, y) # plot revenue by group
-plt.show()
+# standardize
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler() # create StandardScaler() object
+scaled_features = scaler.fit_transform(df_shuffled) # fit scaler model and transform df_shuffled
 
-# style the plot
-import matplotlib.pyplot as plt
-plt.bar(x, y) # plot revenue by group
-plt.xlabel('Item Type') # x-axis label
-plt.ylabel('Sales Revenue ($)') # y-axis label
-plt.title('Sales Revenue by Item Type')
-plt.show() # print the plot
+# instantiate kmeans model
+from sklearn.cluster import KMeans
+model = KMeans(n_clusters=2)
 
-# find the index of the greatest value in list y
-index_of_max_y = y.index(max(y))
-print(index_of_max_y)
+# fit model
+model.fit(scaled_features)
 
-# determine the most sold item
-most_sold_item = x[index_of_max_y]
-print(most_sold_item)
+# get predicted labels
+labels = model.labels_
 
-# make the title programmatic
-import matplotlib.pyplot as plt
-plt.bar(x, y) # plot revenue by group
-plt.xlabel('Item Type') # x-axis label
-plt.ylabel('Sales Revenue ($)') # y-axis label
-plt.title('{} Produce the Most Sales Revenue'.format(most_sold_item)) # create programmatic title
-plt.show() # print the plot
+# see how many of each label we have
+import pandas as pd
+pd.value_counts(labels)
 
-# make a horizontal bar plot
-import matplotlib.pyplot as plt
-plt.barh(x, y) # turn the plot horizontal
-plt.xlabel('Item Type') # x-axis label
-plt.ylabel('Sales Revenue ($)') # y-axis label
-plt.title('{} Produce the Most Sales Revenue'.format(most_sold_item)) # create programmatic title
-plt.show() # print the plot
-
-# switch the axes labels
-import matplotlib.pyplot as plt
-plt.barh(x, y) # turn the plot horizontal
-plt.xlabel('Sales Revenue ($)') # x-axis label
-plt.ylabel('Item Type') # y-axis label
-plt.title('{} Produce the Most Sales Revenue'.format(most_sold_item)) # create programmatic title
-plt.show() # print the plot
-
-
-
-
-
-
-
-
-
-
-
-
-
+# add label to df_shuffled
+df_shuffled['Predicted_Cluster'] = labels
+print(df_shuffled.head(5))
 

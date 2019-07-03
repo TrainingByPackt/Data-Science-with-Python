@@ -1,12 +1,9 @@
-# Activity 2: Evaluating tuned model performance
+# Activity 3: Generating predictions and evaluating performance of grid search SVC model
 
-# continuing from Exercise 7:
-
-# generate predicted probabilities of yes
-predicted_prob = model.predict_proba(X_test)[:,1]
+# continuing from Exercise 9:
 
 # generate predicted classes
-predicted_class = model.predict(X_test)
+predicted_class = model.predict(X_test_scaled)
 
 # evaluate performance with confusion matrix
 from sklearn.metrics import confusion_matrix

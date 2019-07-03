@@ -1,70 +1,24 @@
-# Exercise 1: Line Plot
+# Exercise 1: Building HCA Model 
 
-# create an array of numbers for x
-import numpy as np
-x = np.linspace(0, 10, 20)
-print(x)
+# import data
+import pandas as pd
+df = pd.read_csv('glass.csv')
 
-# create y
-y = x**3
-print(y)
+# get df info
+print(df.info())
 
-# create the plot
-import matplotlib.pyplot as plt
-plt.plot(x, y)
-plt.show()
+# shuffle df
+from sklearn.utils import shuffle
+df_shuffled = shuffle(df, random_state=42)
 
-# add x-axis label
-import matplotlib.pyplot as plt
-plt.plot(x, y)
-plt.xlabel('Linearly Spaced Numbers') # add x axis label
-plt.show()
+# standardize
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler() # instantiate scaler object
+scaled_features = scaler.fit_transform(df_shuffled) # fit and transform df_shuffled
 
-# add y-label
-import matplotlib.pyplot as plt
-plt.plot(x, y)
-plt.xlabel('Linearly Spaced Numbers') # add x axis label
-plt.ylabel('y Value') # add y axis label
-plt.show()
+# create linkage model
+from scipy.cluster.hierarchy import linkage 
+model = linkage(scaled_features, method='complete')
 
-# add title
-import matplotlib.pyplot as plt
-plt.plot(x, y)
-plt.xlabel('Linearly Spaced Numbers') # add x axis label
-plt.ylabel('y Value') # add y axis label
-plt.title('x by x Cubed') # add title
-plt.show()
-
-# change line color
-import matplotlib.pyplot as plt
-plt.plot(x, y, 'k') # change color to black
-plt.xlabel('Linearly Spaced Numbers') # add x axis label
-plt.ylabel('y Value') # add y axis label
-plt.title('x by x Cubed') # add title
-plt.show()
-
-# make markers into diamonds
-import matplotlib.pyplot as plt
-plt.plot(x, y, 'Dk') # make markers into diamonds
-plt.xlabel('Linearly Spaced Numbers') # add x axis label
-plt.ylabel('y Value') # add y axis label
-plt.title('x by x Cubed') # add title
-plt.show()
-
-# connect markers with a solid line
-import matplotlib.pyplot as plt
-plt.plot(x, y, 'D-k') # connect markers with a solid line
-plt.xlabel('Linearly Spaced Numbers') # add x axis label
-plt.ylabel('y Value') # add y axis label
-plt.title('x by x Cubed') # add title
-plt.show()
-
-# increase title font size
-import matplotlib.pyplot as plt
-plt.plot(x, y, 'D-k') # connect markers with a solid line
-plt.xlabel('Linearly Spaced Numbers') # add x axis label
-plt.ylabel('y Value') # add y axis label
-plt.title('x by x Cubed', fontsize=22) # increase font size
-plt.show()
 
 

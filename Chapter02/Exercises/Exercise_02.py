@@ -1,19 +1,56 @@
-# Exercise 2: Fitting a simple linear regression model and determining the intercept and coefficient
+# Exercise 2: Add a Second Line to Line Plot
 
-# continuing from Exercise 1:
+# continuing from exercise 1
 
-# instantiate linear regression model
-from sklearn.linear_model import LinearRegression
-model = LinearRegression()
+# create another line for which to plot
+y2 = x**2
+print(y2)
 
-# fit model to training data
-model.fit(X_train[['Humidity']], y_train)
+# add a line for y2
+import matplotlib.pyplot as plt
+plt.plot(x, y, 'D-k') # connect markers with a solid line
+plt.plot(x, y2) # add a line for y2
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed', fontsize=22) # increase font size
+plt.show()
 
-# extract the intercept
-intercept = model.intercept_
+# change color and style of y2
+import matplotlib.pyplot as plt
+plt.plot(x, y, 'D-k') # connect markers with a solid line
+plt.plot(x, y2, '--r') # make y2 a red, dotted line
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed', fontsize=22) # increase font size
+plt.show()
 
-# extract the coefficient
-coefficient = model.coef_
+# create a legend
+import matplotlib.pyplot as plt
+plt.plot(x, y, 'D-k', label='x cubed') # label as x cubed
+plt.plot(x, y2, '--r', label='x squared') # label as x squared
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed', fontsize=22) # increase font size
+plt.legend(loc='upper left') # create a plot legend and place it in the upper left
+plt.show()
 
-# print the formula
-print('Temperature = {0:0.2f} + ({1:0.2f} x Humidity)'.format(intercept, coefficient[0]))
+# add multi-line, descriptive title
+import matplotlib.pyplot as plt
+plt.plot(x, y, 'D-k', label='x cubed') # label as x cubed
+plt.plot(x, y2, '--r', label='x squared') # label as x squared
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('As x increases, \nx Cubed (black) increases \nat a Greater Rate than \nx Squared (red)', fontsize=22) # make a multi-line title
+plt.legend(loc='upper left') # create a plot legend and place it in the upper left
+plt.show()
+
+# change dimensions of plot
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10,5)) # increase plot size
+plt.plot(x, y, 'D-k', label='x cubed') # label as x cubed
+plt.plot(x, y2, '--r', label='x squared') # label as x squared
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value')
+plt.title('As x increases, \nx Cubed (black) increases \nat a Greater Rate than \nx Squared (red)', fontsize=22) # make a multi-line title
+plt.legend(loc='upper left') # create a plot legend and place it in the upper left
+plt.show()

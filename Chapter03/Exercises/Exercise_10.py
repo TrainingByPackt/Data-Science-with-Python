@@ -1,34 +1,23 @@
-# Exercise 10: Using LDA Transformed Components in Classification Model
+# Exercise 10: Tuning decision tree classifier using grid search in pipeline
 
-# Continuing from Exercise 9:
+# continuing from Activity 4:
 
-# transform the training features to the training components
-X_train_LDA = model.transform(X_train_scaled) 
-
-# transform the testing features to the testing components
-X_test_LDA = model.transform(X_test_scaled) 
-
-# create a random forest model
-from sklearn.ensemble import RandomForestClassifier
-model = RandomForestClassifier() 
-
-# fit the model on the training components
-model.fit(X_train_LDA, y_train) 
-
-# generate predictions on the testing components
-predictions = model.predict(X_test_LDA) 
-
-# style the confusion matrix
-from sklearn.metrics import confusion_matrix 
-import pandas as pd
+# Specify the hyperparameter space
 import numpy as np
-cm = pd.DataFrame(confusion_matrix(y_test, predictions))
-cm['Total'] = np.sum(cm, axis=1)
-cm = cm.append(np.sum(cm, axis=0), ignore_index=True)
-cm.columns = ['Predicted 1', 'Predicted 2', 'Predicted 3', 'Total']
-cm = cm.set_index([['Actual 1', 'Actual 2', 'Actual 3', 'Total']])
-print(cm)
+grid = {'criterion': ['gini', 'entropy'],
+        'min_weight_fraction_leaf': np.linspace(0.0, 0.5, 10),
+        'min_impurity_decrease': np.linspace(0.0, 1.0, 10),
+        'class_weight': [None, 'balanced'],
+        'presort': [True, False]}
 
-# to get the accuracy score
-from sklearn.metrics import accuracy_score
-accuracy_score(y_test, predictions)
+# Instantiate the GridSearchCV model
+from sklearn.model_selection import GridSearchCV
+from sklearn.tree import DecisionTreeClassifier
+model = GridSearchCV(DecisionTreeClassifier(), grid, scoring='f1', cv=5)
+
+# Fit to the training set
+model.fit(X_train_scaled, y_train)
+
+# Print the tuned parameters
+best_parameters = model.best_params_
+print(best_parameters)

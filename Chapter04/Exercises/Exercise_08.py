@@ -1,53 +1,19 @@
-# Exercise 8: Multiple Line Plots Using Subplots
+# Exercise 8: Visual Comparison of Inertia by n_clusters
 
-import numpy as np
-x = np.linspace(0, 10, 20) # create x
-y = x**3 # create y
-y2 = x**2 # create y2
+# Continuing from Activity 2
 
-# create figure object with two subplots that are side-by-side
+# note: for this visualization to work properly, mean_inertia_list from exercise 5 must still be in the environment
+
+# plot inertia by n_clusters with both lines
 import matplotlib.pyplot as plt
-fig, axes = plt.subplots(nrows=1, ncols=2)
-
-# plot x on left axes
-import matplotlib.pyplot as plt
-fig, axes = plt.subplots(nrows=1, ncols=2)
-axes[0].plot(x, y) # plot x squared by y
-
-# add title and axis labels for left axes
-import matplotlib.pyplot as plt
-fig, axes = plt.subplots(nrows=1, ncols=2)
-axes[0].plot(x, y) # plot x squared by y
-axes[0].set_title('x by x Cubed') # set title
-axes[0].set_xlabel('Linearly Spaced Numbers') # set x axis label
-axes[0].set_ylabel('y Value') # set y axis label
-
-# style the right axes
-import matplotlib.pyplot as plt
-fig, axes = plt.subplots(nrows=1, ncols=2)
-axes[0].plot(x, y) # plot x-cubed by x
-axes[0].set_title('x by x Cubed') # set title
-axes[0].set_xlabel('Linearly Spaced Numbers') # set x axis label
-axes[0].set_ylabel('y Value') # set y axis label
-# plot on the right axes
-axes[1].plot(x, y2) # plot x-squared by x
-axes[1].set_title('x by x Squared') # set title
-axes[1].set_xlabel('Linearly Spaced Numbers') # set x axis label
-axes[1].set_ylabel('y Value') # set y axis label
-
-# prevent plot overlap
-import matplotlib.pyplot as plt
-fig, axes = plt.subplots(nrows=1, ncols=2)
-axes[0].plot(x, y) # plot x-cubed by x
-axes[0].set_title('x by x Cubed') # set title
-axes[0].set_xlabel('Linearly Spaced Numbers') # set x axis label
-axes[0].set_ylabel('y Value') # set y axis label
-# plot on the right axes
-axes[1].plot(x, y2) # plot x-squared by x
-axes[1].set_title('x by x Squared') # set title
-axes[1].set_xlabel('Linearly Spaced Numbers') # set x axis label
-axes[1].set_ylabel('y Value') # set y axis label
-plt.tight_layout() # prevent plot overlap
-
-# call the object
-fig
+x = list(range(1,len(mean_inertia_list_PCA)+1))
+y = mean_inertia_list_PCA
+y2 = mean_inertia_list 
+plt.plot(x, y, label='PCA')
+plt.plot(x, y2, label='No PCA')
+plt.title('Mean Inertia by n_clusters for Original Features and PCA Transformed Features')
+plt.xlabel('n_clusters')
+plt.xticks(x)
+plt.ylabel('Inertia')
+plt.legend()
+plt.show()

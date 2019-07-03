@@ -1,48 +1,40 @@
-# Exercise 5: Fitting a logistic regression model and determining the intercept and coefficient
+# Exercise 5: Box-and-Whisker plot
 
-# clear environment prior to running this code
+# Generate a list of normally distributed numbers
+import numpy as np
+y = np.random.normal(loc=0, scale=0.1, size=100) # 100 numbers with mean of 0 and standard deviation of 0.1
 
-# import data
-import pandas as pd
-df = pd.read_csv('weather.csv')
+# Generate boxplot
+import matplotlib.pyplot as plt # import matplotlib
+plt.boxplot(y) # create boxplot of y
+plt.show() # print plot
 
-# dummy code 'Summary'
-import pandas as pd
-df_dummies = pd.get_dummies(df, drop_first=True)
+# Calculate shapiro wilk p-value
+from scipy.stats import shapiro
+shap_w, shap_p = shapiro(y)
+print(shap_p)
 
-# shuffle df_dummies
-from sklearn.utils import shuffle
-df_shuffled = shuffle(df_dummies, random_state=42)
+# Get outliers
+# convert to z-scores
+from scipy.stats import zscore
+y_z_scores = zscore(y) # convert y into z scores
 
-# split df_shuffled into X and y
-DV = 'Rain' # Save the DV as DV
-X = df_shuffled.drop(DV, axis=1) # get features (X)
-y = df_shuffled[DV] # get DV (y)
+# get the number of scores with absolute value of 3 or more
+total_outliers = 0
+for i in range(len(y_z_scores)):
+    if abs(y_z_scores[i]) >= 3:
+        total_outliers += 1
+print(total_outliers)
+           
+# set up some logic for the title
+if shap_p > 0.05:
+    title = 'Normally distributed with {} outlier(s).'.format(total_outliers)
+else:
+    title = 'Not normally distributed with {} outlier(s).'.format(total_outliers)
+print(title)
 
-# split X and y into testing and training data
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42) 
-
-# instantiate logistic regression model
-from sklearn.linear_model import LogisticRegression
-model = LogisticRegression()
-
-# fit the model to the training data
-model.fit(X_train, y_train)
-
-# extract the intercept
-intercept = model.intercept_
-
-# extract the coefficients
-coefficients = model.coef_
-
-# place coefficients in a list
-coef_list = list(coefficients[0,:])
- 
-# put coefficients in a df with feature name
-coef_df = pd.DataFrame({'Feature': list(X_train.columns),
-                        'Coefficient': coef_list})
-print(coef_df)
-
-
-
+# Generate boxplot with programmatic tile
+import matplotlib.pyplot as plt # import matplotlib
+plt.boxplot(y) # generate boxplot
+plt.title(title) # programmatic title
+plt.show() # print plot

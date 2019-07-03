@@ -1,35 +1,53 @@
-# Exercise 8: Preparing data for support vector classifier
+# Exercise 8: Multiple Line Plots Using Subplots
 
-# clear environment prior to running this code
+import numpy as np
+x = np.linspace(0, 10, 20) # create x
+y = x**3 # create y
+y2 = x**2 # create y2
 
-# import data
-import pandas as pd
-df = pd.read_csv('weather.csv')
+# create figure object with two subplots that are side-by-side
+import matplotlib.pyplot as plt
+fig, axes = plt.subplots(nrows=1, ncols=2)
 
-# dummy code 'Summary'
-import pandas as pd
-df_dummies = pd.get_dummies(df, drop_first=True)
+# plot x on left axes
+import matplotlib.pyplot as plt
+fig, axes = plt.subplots(nrows=1, ncols=2)
+axes[0].plot(x, y) # plot x squared by y
 
-# shuffle df_dummies
-from sklearn.utils import shuffle
-df_shuffled = shuffle(df_dummies, random_state=42)
+# add title and axis labels for left axes
+import matplotlib.pyplot as plt
+fig, axes = plt.subplots(nrows=1, ncols=2)
+axes[0].plot(x, y) # plot x squared by y
+axes[0].set_title('x by x Cubed') # set title
+axes[0].set_xlabel('Linearly Spaced Numbers') # set x axis label
+axes[0].set_ylabel('y Value') # set y axis label
 
-# split df_shuffled into X and y
-DV = 'Rain' # Save the DV as DV
-X = df_shuffled.drop(DV, axis=1) # get features (X)
-y = df_shuffled[DV] # get DV (y)
+# style the right axes
+import matplotlib.pyplot as plt
+fig, axes = plt.subplots(nrows=1, ncols=2)
+axes[0].plot(x, y) # plot x-cubed by x
+axes[0].set_title('x by x Cubed') # set title
+axes[0].set_xlabel('Linearly Spaced Numbers') # set x axis label
+axes[0].set_ylabel('y Value') # set y axis label
+# plot on the right axes
+axes[1].plot(x, y2) # plot x-squared by x
+axes[1].set_title('x by x Squared') # set title
+axes[1].set_xlabel('Linearly Spaced Numbers') # set x axis label
+axes[1].set_ylabel('y Value') # set y axis label
 
-# split X and y into testing and training data
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+# prevent plot overlap
+import matplotlib.pyplot as plt
+fig, axes = plt.subplots(nrows=1, ncols=2)
+axes[0].plot(x, y) # plot x-cubed by x
+axes[0].set_title('x by x Cubed') # set title
+axes[0].set_xlabel('Linearly Spaced Numbers') # set x axis label
+axes[0].set_ylabel('y Value') # set y axis label
+# plot on the right axes
+axes[1].plot(x, y2) # plot x-squared by x
+axes[1].set_title('x by x Squared') # set title
+axes[1].set_xlabel('Linearly Spaced Numbers') # set x axis label
+axes[1].set_ylabel('y Value') # set y axis label
+plt.tight_layout() # prevent plot overlap
 
-# scale X_train and X_test
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler() # instantiate StandardScaler model
-X_train_scaled = scaler.fit_transform(X_train) # transform X_train to z-scores
-X_test_scaled = scaler.transform(X_test) # transform X_test to z-scores
-
-
-
-
-
+# call the object
+fig

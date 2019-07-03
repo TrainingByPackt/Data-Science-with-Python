@@ -1,20 +1,21 @@
-# Exercise 7: Choosing n_components using Threshold
+# Exercise 7: Tuning hyperparameters of logistic regression model
 
-# Continuing from Exercise 6:
+# continuing from Exercise 6:
 
-# get the cumulative sum of explained variance by each component
+# instantiate a grid with the possible values for hyperparamters (see documentation)
 import numpy as np
-cum_sum_explained_var = np.cumsum(model.explained_variance_ratio_)
-print(cum_sum_explained_var)
+grid = {'penalty': ['l1', 'l2'],
+        'C': np.linspace(1, 10, 10)}
 
-# set a threshold for % of variance in the data to preserve
-threshold = .95
-for i in range(len(cum_sum_explained_var)):
-    if cum_sum_explained_var[i] >= threshold:
-        best_n_components = i+1
-        break
-    else:
-        pass
-    
-# print the best number of n_components
-print('The best n_components is {}'.format(best_n_components))
+# instantiate GridSearchCV model
+from sklearn.model_selection import GridSearchCV
+from sklearn.linear_model import LogisticRegression
+model = GridSearchCV(LogisticRegression(solver='liblinear'), grid, scoring='f1', cv=5)
+
+# fit the gridsearch model
+model.fit(X_train, y_train)
+
+# print the best parameters
+best_parameters = model.best_params_
+print(best_parameters)
+

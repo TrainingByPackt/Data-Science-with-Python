@@ -1,38 +1,30 @@
-# Exercise 4: Histogram
+# Exercise 4: Calculating Mean Inertia by n_clusters
 
-# generate list of normally distributed numbers
+# import data
+import pandas as pd
+df = pd.read_csv('glass.csv')
+
+# shuffle df
+from sklearn.utils import shuffle
+df_shuffled = shuffle(df, random_state=42)
+
+# standardize
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler() # create StandardScaler() object
+scaled_features = scaler.fit_transform(df_shuffled) # fit scaler model and transform df_shuffled
+
+# calculate mean inertia by n_clusters
+from sklearn.cluster import KMeans
 import numpy as np
-y = np.random.normal(loc=0, scale=0.1, size=100) # 100 numbers with mean of 0 and standard deviation of 0.1
-print(y)
-
-# create histogram
-import matplotlib.pyplot as plt
-plt.hist(y, bins=20)
-plt.show()
-
-# label the axes
-import matplotlib.pyplot as plt
-plt.hist(y, bins=20)
-plt.xlabel('y Value')
-plt.ylabel('Frequency')
-plt.show()
-
-# run the shapiro wilk test
-from scipy.stats import shapiro
-shap_w, shap_p = shapiro(y)
-print(shap_p)
-
-# set up some logic
-if shap_p > 0.05:
-    normal_YN = 'Fail to reject the null hypothesis. Data is normally distributed.'
-else:
-    normal_YN = 'Null hypothesis is rejected. Data is not normally distributed.'
-print(normal_YN)
-
-# re-create histogram
-import matplotlib.pyplot as plt
-plt.hist(y, bins=20)
-plt.xlabel('y Value')
-plt.ylabel('Frequency')
-plt.title(normal_YN) # programmatic plot title
-plt.show()
+mean_inertia_list = [] # create a list for the average inertia at each n_clusters
+for x in range(1, 11): # loop through n_clusters 1-10
+    inertia_list = [] # create a list for each individual inertia value at n_cluster
+    for i in range(100):
+        model = KMeans(n_clusters=x) # instantiate model
+        model.fit(scaled_features) # fit model
+        inertia = model.inertia_ # get inertia
+        inertia_list.append(inertia) # append inertia to inertia_list
+    # moving to the outside loop
+    mean_inertia = np.mean(inertia_list) # get mean of inertia list
+    mean_inertia_list.append(mean_inertia) # append mean_inertia to mean_inertia_list
+print(mean_inertia_list) 

@@ -1,24 +1,19 @@
-# Exercise 2: Plotting HCA Model and Assigning Predictions
+# Exercise 2: Fitting a simple linear regression model and determining the intercept and coefficient
 
-# continuing from exercise 1:
+# continuing from Exercise 1:
 
-# plot dendrogram
-import matplotlib.pyplot as plt 
-from scipy.cluster.hierarchy import dendrogram
-plt.figure(figsize=(10,5))
-plt.title('Dendrogram for Glass Data')
-dendrogram(model,
-           leaf_rotation=90,
-           leaf_font_size=6)
-plt.show()
+# instantiate linear regression model
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
 
-# get labels
-from scipy.cluster.hierarchy import fcluster 
-labels = fcluster(model, t=9, criterion='distance')
-print(labels)
+# fit model to training data
+model.fit(X_train[['Humidity']], y_train)
 
-# assign labels array as a column in df_shuffled
-df_shuffled['Predicted_Cluster'] = labels
+# extract the intercept
+intercept = model.intercept_
 
-# preview data
-print(df_shuffled.head(5))
+# extract the coefficient
+coefficient = model.coef_
+
+# print the formula
+print('Temperature = {0:0.2f} + ({1:0.2f} x Humidity)'.format(intercept, coefficient[0]))

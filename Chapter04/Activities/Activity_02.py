@@ -1,43 +1,27 @@
-# Activity 2: Bar plot
+# Activity 2: Evaluating Mean Inertia by Cluster After PCA Transformation
 
-# Create a list for x
-x = ['Boston Celtics','Los Angeles Lakers', 'Chicago Bulls', 'Golden State Warriors', 'San Antonio Spurs']
-print(x)
+# Continuing from Exercise 7:
 
-# Create a list for y
-y = [17, 16, 6, 6, 5]
-print(y)
+from sklearn.decomposition import PCA
+model = PCA(n_components=best_n_components) # remember, best_n_components = 6
 
-# Put into a data frame so we can sort them
-import pandas as pd
-df = pd.DataFrame({'Team': x,
-                   'Titles': y})
+# fit model and transform scaled_features into best_n_components
+df_pca = model.fit_transform(scaled_features)
 
-# Sort df by titles
-df_sorted = df.sort_values(by=('Titles'), ascending=False)
-
-# Make a programmatic title
-team_with_most_titles = df_sorted['Team'][0] # get team with most titles
-most_titles = df_sorted['Titles'][0] # get the number of max titles
-title = 'The {} have the most titles with {}'.format(team_with_most_titles, most_titles) # create title
-print(title)
-
-# Plot it
-import matplotlib.pyplot as plt # import matplotlib
-plt.bar(df_sorted['Team'], df_sorted['Titles'], color='red') # plot titles by team and make bars red
-plt.xlabel('Team') # create x label
-plt.ylabel('Number of Championships') # create y label
-plt.xticks(rotation=45) # rotate x tick labels 45 degrees
-plt.title(title) # title
-plt.savefig('Titles_by_Team') # save figure to present working directory
-plt.show() # print plot
-
-# Fix the cropping
-import matplotlib.pyplot as plt
-plt.bar(df_sorted['Team'], df_sorted['Titles'], color='red')
-plt.xlabel('Team')
-plt.ylabel('Number of Championships')
-plt.xticks(rotation=45)
-plt.title(title)
-plt.savefig('Titles_by_Team', bbox_inches='tight') # fix the cropping issue
-plt.show()
+# fit 100 models for each n_clusters 1-10
+from sklearn.cluster import KMeans
+import numpy as np
+mean_inertia_list_PCA = [] # create a list for the average inertia at each n_clusters
+for x in range(1, 11): # loop through n_clusters 1-10
+    inertia_list = [] # create a list for each individual inertia value at n_cluster
+    for i in range(100):
+        model = KMeans(n_clusters=x) # instantiate model
+        model.fit(df_pca) # fit model
+        inertia = model.inertia_ # get inertia
+        inertia_list.append(inertia) # append inertia to inertia_list
+    # moving to the outside loop
+    mean_inertia = np.mean(inertia_list) # get mean of inertia list
+    mean_inertia_list_PCA.append(mean_inertia) # append mean_inertia to mean_inertia_list
+    
+# print mean_inertia_list_PCA
+print(mean_inertia_list_PCA)  

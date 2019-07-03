@@ -1,32 +1,70 @@
-# Exercise 1: Preparing data for linear regression model
+# Exercise 1: Line Plot
 
-# import data
-import pandas as pd
-df = pd.read_csv('weather.csv')
+# create an array of numbers for x
+import numpy as np
+x = np.linspace(0, 10, 20)
+print(x)
 
-# check info
-df.info() 
+# create y
+y = x**3
+print(y)
 
-# get number of levels in 'Summary'
-levels = len(pd.value_counts(df['Description']))
-print('There are {} levels in the Description column'.format(levels))
+# create the plot
+import matplotlib.pyplot as plt
+plt.plot(x, y)
+plt.show()
 
-# dummy code 'Summary'
-import pandas as pd
-df_dummies = pd.get_dummies(df, drop_first=True)
+# add x-axis label
+import matplotlib.pyplot as plt
+plt.plot(x, y)
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.show()
 
-# check info
-print('There are {} columns in df_dummies'.format(df_dummies.shape[1]))
+# add y-label
+import matplotlib.pyplot as plt
+plt.plot(x, y)
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.show()
 
-# shuffle df_dummies
-from sklearn.utils import shuffle
-df_shuffled = shuffle(df_dummies, random_state=42)
+# add title
+import matplotlib.pyplot as plt
+plt.plot(x, y)
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed') # add title
+plt.show()
 
-# split df_shuffled into X and y
-DV = 'Temperature_c' # Save the DV as DV
-X = df_shuffled.drop(DV, axis=1) # get features (X)
-y = df_shuffled[DV] # get DV (y)
+# change line color
+import matplotlib.pyplot as plt
+plt.plot(x, y, 'k') # change color to black
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed') # add title
+plt.show()
 
-# split X and y into testing and training data
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+# make markers into diamonds
+import matplotlib.pyplot as plt
+plt.plot(x, y, 'Dk') # make markers into diamonds
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed') # add title
+plt.show()
+
+# connect markers with a solid line
+import matplotlib.pyplot as plt
+plt.plot(x, y, 'D-k') # connect markers with a solid line
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed') # add title
+plt.show()
+
+# increase title font size
+import matplotlib.pyplot as plt
+plt.plot(x, y, 'D-k') # connect markers with a solid line
+plt.xlabel('Linearly Spaced Numbers') # add x axis label
+plt.ylabel('y Value') # add y axis label
+plt.title('x by x Cubed', fontsize=22) # increase font size
+plt.show()
+
+

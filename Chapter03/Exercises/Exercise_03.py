@@ -1,33 +1,40 @@
-# Exercise 3: Fitting k-Means Model and Assigning Predictions
+# Exercise 3: Generating predictions and evaluating performance of simple linear regression model
 
-# import data
-import pandas as pd
-df = pd.read_csv('glass.csv')
+# continuing from Exercise 2: 
 
-# shuffle df
-from sklearn.utils import shuffle
-df_shuffled = shuffle(df, random_state=42)
+# generate predictions on the test data
+predictions = model.predict(X_test[['Humidity']])
 
-# standardize
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler() # create StandardScaler() object
-scaled_features = scaler.fit_transform(df_shuffled) # fit scaler model and transform df_shuffled
+# plot correlation of predicted and actual values
+import matplotlib.pyplot as plt
+from scipy.stats import pearsonr
+plt.scatter(y_test, predictions)
+plt.xlabel('Y Test (True Values)')
+plt.ylabel('Predicted Values')
+plt.title('Predicted vs. Actual Values (r = {0:0.2f})'.format(pearsonr(y_test, predictions)[0], 2))
+plt.show()
 
-# instantiate kmeans model
-from sklearn.cluster import KMeans
-model = KMeans(n_clusters=2)
+# plot distribution of residuals
+import seaborn as sns
+from scipy.stats import shapiro
+sns.distplot((y_test - predictions), bins = 50)
+plt.xlabel('Residuals')
+plt.ylabel('Density')
+plt.title('Histogram of Residuals (Shapiro W p-value = {0:0.3f})'.format(shapiro(y_test - predictions)[1]))
+plt.show()
 
-# fit model
-model.fit(scaled_features)
+# compute metrics and put into a dataframe
+from sklearn import metrics
+import numpy as np
+metrics_df = pd.DataFrame({'Metric': ['MAE', 
+                                      'MSE', 
+                                      'RMSE', 
+                                      'R-Squared'],
+                          'Value': [metrics.mean_absolute_error(y_test, predictions),
+                                    metrics.mean_squared_error(y_test, predictions),
+                                    np.sqrt(metrics.mean_squared_error(y_test, predictions)),
+                                    metrics.explained_variance_score(y_test, predictions)]}).round(3)
+print(metrics_df)
 
-# get predicted labels
-labels = model.labels_
 
-# see how many of each label we have
-import pandas as pd
-pd.value_counts(labels)
-
-# add label to df_shuffled
-df_shuffled['Predicted_Cluster'] = labels
-print(df_shuffled.head(5))
 

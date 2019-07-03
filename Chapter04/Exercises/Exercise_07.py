@@ -1,31 +1,20 @@
-# Exercise 7: Single Line Plot Using Subplots
+# Exercise 7: Choosing n_components using Threshold
 
+# Continuing from Exercise 6:
+
+# get the cumulative sum of explained variance by each component
 import numpy as np
-x = np.linspace(0, 10, 20) # create x
-y = x**3 # create y
+cum_sum_explained_var = np.cumsum(model.explained_variance_ratio_)
+print(cum_sum_explained_var)
 
-# create figure and a set of axes
-import matplotlib.pyplot as plt # import dependencies
-fig, axes = plt.subplots() # create figure and set of axes
-plt.show() # print plot
-
-# call the plot object
-fig
-
-# create a line plot in the axes
-import matplotlib.pyplot as plt # import dependencies
-fig, axes = plt.subplots() # create figure and set of axes
-axes.plot(x, y) # generate line
-plt.show() # print plot
-
-# create styled plot
-import matplotlib.pyplot as plt # import matplotlib
-fig, axes = plt.subplots() # create figure and axes
-axes.plot(x, y, 'D-k') # create black line with diamond markers
-axes.set_xlabel('Linearly Spaced Numbers') # x label
-axes.set_ylabel('y Value') # y label
-axes.set_title('As x increases, y increases by x cubed') # set title
-plt.show() # print plot
-
-# call the plot object
-fig
+# set a threshold for % of variance in the data to preserve
+threshold = .95
+for i in range(len(cum_sum_explained_var)):
+    if cum_sum_explained_var[i] >= threshold:
+        best_n_components = i+1
+        break
+    else:
+        pass
+    
+# print the best number of n_components
+print('The best n_components is {}'.format(best_n_components))

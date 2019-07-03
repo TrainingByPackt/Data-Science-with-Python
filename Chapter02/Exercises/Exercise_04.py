@@ -1,30 +1,38 @@
-# Exercise 4: Fitting a multiple linear regression model and determining the intercept and coefficient
+# Exercise 4: Histogram
 
-# continuing from Exercise 3:
+# generate list of normally distributed numbers
+import numpy as np
+y = np.random.normal(loc=0, scale=0.1, size=100) # 100 numbers with mean of 0 and standard deviation of 0.1
+print(y)
 
-# instantiate linear regression model
-from sklearn.linear_model import LinearRegression
-model = LinearRegression()
+# create histogram
+import matplotlib.pyplot as plt
+plt.hist(y, bins=20)
+plt.show()
 
-# fit model to training data
-model.fit(X_train, y_train)
+# label the axes
+import matplotlib.pyplot as plt
+plt.hist(y, bins=20)
+plt.xlabel('y Value')
+plt.ylabel('Frequency')
+plt.show()
 
-# extract the intercept
-intercept = model.intercept_
+# run the shapiro wilk test
+from scipy.stats import shapiro
+shap_w, shap_p = shapiro(y)
+print(shap_p)
 
-# extract the coefficients
-coefficients = model.coef_
+# set up some logic
+if shap_p > 0.05:
+    normal_YN = 'Fail to reject the null hypothesis. Data is normally distributed.'
+else:
+    normal_YN = 'Null hypothesis is rejected. Data is not normally distributed.'
+print(normal_YN)
 
-# print the formula
-print('Temperature = {0:0.2f} + ({1:0.2f} x Humidity) + ({2:0.2f} x Wind Speed) + ({3:0.2f} x Wind Bearing Degrees) + ({4:0.2f} x Visibility) + ({5:0.2f} x Pressure) + ({6:0.2f} x Rain) + ({7:0.2f} x Normal Weather) + ({8:0.2f} x Warm Weather)'.format(intercept, 
-                                                                                                                                                                                                                                                            coefficients[0],
-                                                                                                                                                                                                                                                            coefficients[1],
-                                                                                                                                                                                                                                                            coefficients[2],
-                                                                                                                                                                                                                                                            coefficients[3],
-                                                                                                                                                                                                                                                            coefficients[4],
-                                                                                                                                                                                                                                                            coefficients[5],
-                                                                                                                                                                                                                                                            coefficients[6],
-                                                                                                                                                                                                                                                            coefficients[7]))
-
- 
-                                                                  
+# re-create histogram
+import matplotlib.pyplot as plt
+plt.hist(y, bins=20)
+plt.xlabel('y Value')
+plt.ylabel('Frequency')
+plt.title(normal_YN) # programmatic plot title
+plt.show()

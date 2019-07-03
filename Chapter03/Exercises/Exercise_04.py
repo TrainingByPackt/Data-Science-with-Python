@@ -1,30 +1,30 @@
-# Exercise 4: Calculating Mean Inertia by n_clusters
+# Exercise 4: Fitting a multiple linear regression model and determining the intercept and coefficient
 
-# import data
-import pandas as pd
-df = pd.read_csv('glass.csv')
+# continuing from Exercise 3:
 
-# shuffle df
-from sklearn.utils import shuffle
-df_shuffled = shuffle(df, random_state=42)
+# instantiate linear regression model
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
 
-# standardize
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler() # create StandardScaler() object
-scaled_features = scaler.fit_transform(df_shuffled) # fit scaler model and transform df_shuffled
+# fit model to training data
+model.fit(X_train, y_train)
 
-# calculate mean inertia by n_clusters
-from sklearn.cluster import KMeans
-import numpy as np
-mean_inertia_list = [] # create a list for the average inertia at each n_clusters
-for x in range(1, 11): # loop through n_clusters 1-10
-    inertia_list = [] # create a list for each individual inertia value at n_cluster
-    for i in range(100):
-        model = KMeans(n_clusters=x) # instantiate model
-        model.fit(scaled_features) # fit model
-        inertia = model.inertia_ # get inertia
-        inertia_list.append(inertia) # append inertia to inertia_list
-    # moving to the outside loop
-    mean_inertia = np.mean(inertia_list) # get mean of inertia list
-    mean_inertia_list.append(mean_inertia) # append mean_inertia to mean_inertia_list
-print(mean_inertia_list) 
+# extract the intercept
+intercept = model.intercept_
+
+# extract the coefficients
+coefficients = model.coef_
+
+# print the formula
+print('Temperature = {0:0.2f} + ({1:0.2f} x Humidity) + ({2:0.2f} x Wind Speed) + ({3:0.2f} x Wind Bearing Degrees) + ({4:0.2f} x Visibility) + ({5:0.2f} x Pressure) + ({6:0.2f} x Rain) + ({7:0.2f} x Normal Weather) + ({8:0.2f} x Warm Weather)'.format(intercept, 
+                                                                                                                                                                                                                                                            coefficients[0],
+                                                                                                                                                                                                                                                            coefficients[1],
+                                                                                                                                                                                                                                                            coefficients[2],
+                                                                                                                                                                                                                                                            coefficients[3],
+                                                                                                                                                                                                                                                            coefficients[4],
+                                                                                                                                                                                                                                                            coefficients[5],
+                                                                                                                                                                                                                                                            coefficients[6],
+                                                                                                                                                                                                                                                            coefficients[7]))
+
+ 
+                                                                  

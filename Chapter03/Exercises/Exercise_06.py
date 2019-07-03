@@ -1,27 +1,24 @@
-# Exercise 6: Fitting PCA Model
+# Exercise 6: Generating predictions and evaluating performance of logistic regression model
 
-# import data
-import pandas as pd
-df = pd.read_csv('glass.csv')
+# continuing from Exercise 5:
 
-# shuffle df
-from sklearn.utils import shuffle
-df_shuffled = shuffle(df, random_state=42)
+# generate predicted probabilities of yes
+predicted_prob = model.predict_proba(X_test)[:,1]
 
-# standardize
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler() # instantiate scaler object
-scaled_features = scaler.fit_transform(df_shuffled) # fit and transform df_shuffled
+# generate predicted classes
+predicted_class = model.predict(X_test)
 
-# instantiate PCA model
-from sklearn.decomposition import PCA
-model = PCA()
+# evaluate performance with confusion matrix
+from sklearn.metrics import confusion_matrix
+import numpy as np
+cm = pd.DataFrame(confusion_matrix(y_test, predicted_class))
+cm['Total'] = np.sum(cm, axis=1)
+cm = cm.append(np.sum(cm, axis=0), ignore_index=True)
+cm.columns = ['Predicted No', 'Predicted Yes', 'Total']
+cm = cm.set_index([['Actual No', 'Actual Yes', 'Total']])
+print(cm)
 
-# fit model
-model.fit(scaled_features)
+# generate a classification report
+from sklearn.metrics import classification_report
+print(classification_report(y_test, predicted_class))
 
-# get proportion of explained variance in each component
-explained_var_ratio = model.explained_variance_ratio_
-
-# print the explained variance ratio
-print(explained_var_ratio)

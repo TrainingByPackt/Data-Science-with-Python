@@ -1,4 +1,4 @@
-# Exercise 8: Preparing data for support vector classifier
+# Activity 4: Prepare data for decision tree classifier
 
 # clear environment prior to running this code
 
@@ -25,11 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random
 
 # scale X_train and X_test
 from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler() # instantiate StandardScaler model
-X_train_scaled = scaler.fit_transform(X_train) # transform X_train to z-scores
-X_test_scaled = scaler.transform(X_test) # transform X_test to z-scores
-
-
-
-
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 

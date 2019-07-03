@@ -1,6 +1,6 @@
-# Activity 1: Generating predictions and evaluating performance of multiple linear regression model
+# Activity 7: Generating predictions and evaluating performance of tuned random forest regressor model
 
-# continuing from Exercise 4:
+# continuing from Exercise 13:
 
 # generate predictions on the test data
 predictions = model.predict(X_test)

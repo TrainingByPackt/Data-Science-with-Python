@@ -1,56 +1,27 @@
-# Exercise 6: Scatterplot
+# Exercise 6: Fitting PCA Model
 
-# generate list of numbers for height
-y = [5, 5.5, 5, 5.5, 6, 6.5, 6, 6.5, 7, 5.5, 5.25, 6, 5.25]
-print(y)
+# import data
+import pandas as pd
+df = pd.read_csv('glass.csv')
 
-# create a list of numbers for weight
-x = [100, 150, 110, 140, 140, 170, 168, 165, 180, 125, 115, 155, 135]
-print(x)
+# shuffle df
+from sklearn.utils import shuffle
+df_shuffled = shuffle(df, random_state=42)
 
-# create histogram
-import matplotlib.pyplot as plt
-plt.scatter(x, y) # generate scatterplot
-plt.xlabel('Weight') # label x-axis
-plt.ylabel('Height') # label y-axis
-plt.show() # print plot
+# standardize
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler() # instantiate scaler object
+scaled_features = scaler.fit_transform(df_shuffled) # fit and transform df_shuffled
 
-# calculate pearson correlations
-from scipy.stats import pearsonr
-correlation_coeff, p_value = pearsonr(x, y)
-print(correlation_coeff)
+# instantiate PCA model
+from sklearn.decomposition import PCA
+model = PCA()
 
-# Set up some logic
-if correlation_coeff == 1.00:
-    title = 'There is a perfect positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff >= 0.8:
-    title = 'There is a very strong, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff >= 0.6:
-    title = 'There is a strong, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff >= 0.4:
-    title = 'There is a moderate, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff >= 0.2:
-    title = 'There is a weak, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff > 0:
-    title = 'There is a very weak, positive linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff == 0:
-    title = 'There is no linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff <= -0.8:
-    title = 'There is a very strong, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff <= -0.6:
-    title = 'There is a strong, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff <= -0.4:
-    title = 'There is a moderate, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-elif correlation_coeff <= -0.2:
-    title = 'There is a weak, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-else: 
-    title = 'There is a very weak, negative linear relationship (r = {0:0.2f}).'.format(correlation_coeff)
-print(title)
+# fit model
+model.fit(scaled_features)
 
-# Use title as title
-import matplotlib.pyplot as plt
-plt.scatter(x, y) # generate scatterplot
-plt.xlabel('Weight') # label x-axis
-plt.ylabel('Height') # label y-axis
-plt.title(title) # set programmatic title
-plt.show() # print plot
+# get proportion of explained variance in each component
+explained_var_ratio = model.explained_variance_ratio_
+
+# print the explained variance ratio
+print(explained_var_ratio)

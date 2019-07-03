@@ -1,4 +1,4 @@
-# Exercise 8: Preparing data for support vector classifier
+# Exercise 12: Preparing data for random forest regressor
 
 # clear environment prior to running this code
 
@@ -15,7 +15,7 @@ from sklearn.utils import shuffle
 df_shuffled = shuffle(df_dummies, random_state=42)
 
 # split df_shuffled into X and y
-DV = 'Rain' # Save the DV as DV
+DV = 'Temperature_c' # Save the DV as DV
 X = df_shuffled.drop(DV, axis=1) # get features (X)
 y = df_shuffled[DV] # get DV (y)
 
@@ -25,11 +25,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random
 
 # scale X_train and X_test
 from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler() # instantiate StandardScaler model
-X_train_scaled = scaler.fit_transform(X_train) # transform X_train to z-scores
-X_test_scaled = scaler.transform(X_test) # transform X_test to z-scores
-
-
-
-
-
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
