@@ -1,6 +1,9 @@
-# Activity 3: Generating predictions and evaluating performance of grid search SVC model
+# Activity 5: Generating predictions and evaluating performance of decision tree classifier model
 
-# continuing from Exercise 9:
+# continuing from Exercise 11:
+
+# generate predicted probabilities of rain
+predicted_prob = model.predict_proba(X_test_scaled)[:,1]
 
 # generate predicted classes
 predicted_class = model.predict(X_test_scaled)
@@ -18,3 +21,5 @@ print(cm)
 # generate a classification report
 from sklearn.metrics import classification_report
 print(classification_report(y_test, predicted_class))
+
+

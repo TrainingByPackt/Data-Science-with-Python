@@ -1,25 +1,23 @@
-# Activity 6: Tuning a random forest regressor
+# Activity 2: Evaluating tuned model performance
 
-# continuing from Exercise 12
+# continuing from Exercise 7:
 
-# Specify the hyperparameter space
+# generate predicted probabilities of yes
+predicted_prob = model.predict_proba(X_test)[:,1]
+
+# generate predicted classes
+predicted_class = model.predict(X_test)
+
+# evaluate performance with confusion matrix
+from sklearn.metrics import confusion_matrix
 import numpy as np
-grid = {'criterion': ['mse','mae'],
-        'max_features': ['auto', 'sqrt', 'log2', None],
-        'min_impurity_decrease': np.linspace(0.0, 1.0, 10),
-        'bootstrap': [True, False],
-        'warm_start': [True, False]}
+cm = pd.DataFrame(confusion_matrix(y_test, predicted_class))
+cm['Total'] = np.sum(cm, axis=1)
+cm = cm.append(np.sum(cm, axis=0), ignore_index=True)
+cm.columns = ['Predicted No', 'Predicted Yes', 'Total']
+cm = cm.set_index([['Actual No', 'Actual Yes', 'Total']])
+print(cm)
 
-# Instantiate the GridSearchCV model
-from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import RandomForestRegressor
-model = GridSearchCV(RandomForestRegressor(), grid, scoring='explained_variance', cv=5)
-
-# Fit to the training set
-model.fit(X_train_scaled, y_train)
-
-# Print the tuned parameters
-best_parameters = model.best_params_
-print(best_parameters)
-
-
+# generate a classification report
+from sklearn.metrics import classification_report
+print(classification_report(y_test, predicted_class))

@@ -1,25 +1,37 @@
-# Activity 5: Generating predictions and evaluating performance of decision tree classifier model
+# Activity 1: Generating predictions and evaluating performance of multiple linear regression model
 
-# continuing from Exercise 11:
+# continuing from Exercise 4:
 
-# generate predicted probabilities of rain
-predicted_prob = model.predict_proba(X_test_scaled)[:,1]
+# generate predictions on the test data
+predictions = model.predict(X_test)
 
-# generate predicted classes
-predicted_class = model.predict(X_test_scaled)
+# plot correlation of predicted and actual values
+import matplotlib.pyplot as plt
+from scipy.stats import pearsonr
+plt.scatter(y_test, predictions)
+plt.xlabel('Y Test (True Values)')
+plt.ylabel('Predicted Values')
+plt.title('Predicted vs. Actual Values (r = {0:0.2f})'.format(pearsonr(y_test, predictions)[0], 2))
+plt.show()
 
-# evaluate performance with confusion matrix
-from sklearn.metrics import confusion_matrix
+# plot distribution of residuals
+import seaborn as sns
+from scipy.stats import shapiro
+sns.distplot((y_test - predictions), bins = 50)
+plt.xlabel('Residuals')
+plt.ylabel('Density')
+plt.title('Histogram of Residuals (Shapiro W p-value = {0:0.3f})'.format(shapiro(y_test - predictions)[1]))
+plt.show()
+
+# compute metrics and put into a dataframe
+from sklearn import metrics
 import numpy as np
-cm = pd.DataFrame(confusion_matrix(y_test, predicted_class))
-cm['Total'] = np.sum(cm, axis=1)
-cm = cm.append(np.sum(cm, axis=0), ignore_index=True)
-cm.columns = ['Predicted No', 'Predicted Yes', 'Total']
-cm = cm.set_index([['Actual No', 'Actual Yes', 'Total']])
-print(cm)
-
-# generate a classification report
-from sklearn.metrics import classification_report
-print(classification_report(y_test, predicted_class))
-
-
+metrics_df = pd.DataFrame({'Metric': ['MAE', 
+                                      'MSE', 
+                                      'RMSE', 
+                                      'R-Squared'],
+                          'Value': [metrics.mean_absolute_error(y_test, predictions),
+                                    metrics.mean_squared_error(y_test, predictions),
+                                    np.sqrt(metrics.mean_squared_error(y_test, predictions)),
+                                    metrics.explained_variance_score(y_test, predictions)]}).round(3)
+print(metrics_df)
